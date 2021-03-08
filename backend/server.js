@@ -3,9 +3,10 @@ const express=require('express')
 const bodyparser=require('body-parser')
 const cookie_parser=require('cookie-parser')
 const cors=require('cors')
+const bcryptjs=require('bcryptjs')
 
 const {graphqlHTTP}=require('express-graphql')
-const {buildSchema}=require('graphql')
+// const {buildSchema}=require('graphql')
 
 require('./UserModel/mongoose_setup')
 
@@ -19,7 +20,9 @@ server.use(bodyparser.urlencoded({extended:true}))
 server.use(cors())
 server.use(cookie_parser())
 
-const resolvers=require('./resolvers/resolvers')
+const Mobileuser=require('./UserModel/user_schema')
+
+
 const Schema=require('./schema/query_mutation')
 
 server.use('/graphqlserver',
@@ -27,7 +30,42 @@ graphqlHTTP((request,response)=>({
     schema:Schema,
     graphiql:true,
     rootValue:{
-          
+        //create mobile user
+        createMobileuser:({username,password,mobile_no})=>{
+            try{
+                return  Mobileuser.findOne({phone_no:mobile_no}).then(user=>{
+                    if(user)
+                    {
+                        throw new Error('user is already created!')
+                    }
+                    else {
+                      return   bcryptjs.genSalt(12,(err,salt)=>{
+                      return   bcryptjs.hash(password,salt,(err,hashedpassword)=>{
+                                return Mobileuser({
+                                    username:username,
+                                    password:hashedpassword,
+                                    phone_no:mobile_no
+                                }).save().then(saved_user=>{
+                                    console.log(saved_user)
+                                    
+                                }).catch(err=>{
+                                    throw new Error(err)
+                                })
+                            })
+                        })
+                    
+                    }
+                })
+            }
+            catch(err){
+                console.log(err)
+            }
+        },
+        // signed in mobile users
+        signedInMobileusers:()=>{
+
+        }
+
     }
     
 })))

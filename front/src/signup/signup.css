@@ -1,0 +1,135 @@
+:root{
+    --border:1px solid red;
+    --border_bottom:2px solid black;
+    --font_fam:'Roboto', sans-serif;
+    --font_fam_open:'Open Sans', sans-serif;
+    --font_fam_qua: 'Quattrocento', serif;
+    --font_fam_oswald: 'Oswald', sans-serif;
+    --font_fam_rale:'Raleway', sans-serif;
+}
+
+.div-1-l{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 20rem;
+    margin-top: 8rem;
+} 
+.div-form-l-1{
+display: flex;
+width: 90%;
+align-items: center;
+flex-direction: column;
+height: 25rem;
+box-shadow: 0px 0px 3rem 0.05rem rgba(126, 125, 125, 0.25);
+}
+.in-div-1{
+width: 90%;
+display: flex;
+justify-content: center;
+border: none;
+border-bottom:var(--border) ;
+margin-bottom: 2rem;
+}
+.in-div-2{
+    width: 90%;
+    display: flex;
+    justify-content: center;
+    border-bottom:var(--border) ;
+    margin-bottom: 2rem;
+    }
+    .in-div-3{
+        width: 90%;
+        display: flex;
+        justify-content: center;
+        border: none;
+        border-bottom:var(--border) ;
+        margin-bottom: 2rem;
+        }
+    .in-div-4{
+        width: 90%;
+        display: flex;
+        justify-content: center;
+        border-bottom:var(--border) ;
+        margin-bottom: 1rem;
+        }
+.in-1{
+
+    width: 100%;
+    line-height: 1rem;
+    outline: none;
+    padding:0 0.4rem;
+    border: none;
+    font-family: var(--font_fam_open);
+    letter-spacing: 0.05rem;
+}
+.in-3{
+
+    width: 100%;
+    line-height: 1rem;
+    outline: none;
+    padding:0 0.4rem;
+    border: none;
+    font-family: var(--font_fam_open);
+    letter-spacing: 0.05rem;
+}
+.in-2{
+    border: none;
+    width: 100%;
+    outline: none;
+    line-height: 1rem;
+    padding:0 0.4rem;
+    font-family: var(--font_fam_open);
+    letter-spacing: 0.05rem;
+}
+.in-4{
+    border: none;
+    width: 100%;
+    outline: none;
+    line-height: 1rem;
+    padding:0 0.4rem;
+    font-family: var(--font_fam_open);
+    letter-spacing: 0.05rem;
+}
+.butt-div-1{
+    width: 80%;
+    margin-top: 0.5rem;
+    display: flex;
+    justify-content: center;
+    
+}
+.butt-1{
+width: 100%;
+font-family:var(--font_fam_rale);
+letter-spacing: 0.05rem;
+font-size: 1rem;
+outline: none;
+border: none;
+padding: 0.5rem;
+cursor: pointer;
+}
+.hide-l-1{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.head-l-1{
+    font-size:1.5rem;
+    font-family:var(--font_fam_rale);
+}
+.google-signup{
+    margin-top: 1rem;
+    width: 100%;
+    background: #ffffff;
+    border: none;
+    outline: none;
+    font-size: 0.8rem;
+   
+    font-family: var(--font_fam_rale);
+}
+.last-op-2{
+    display: flex;
+    margin-top: 0.5rem;
+    font-family: var(--font_fam_open);
+    font-size:0.78rem;
+}

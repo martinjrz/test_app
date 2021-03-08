@@ -1,0 +1,51 @@
+body{
+    margin: 0;
+    padding: 0;
+}
+:root{
+    --border:1px solid red;
+    --border_bottom:2px solid black;
+    --font_fam:'Roboto', sans-serif;
+    --font_fam_open:'Open Sans', sans-serif;
+    --font_fam_qua: 'Quattrocento', serif;
+    --font_fam_oswald: 'Oswald', sans-serif;
+    --font_fam_rale:'Raleway', sans-serif;
+}
+.h-l-1{
+border: var(--border);
+display: flex;
+padding: 0;
+justify-content: flex-end;
+
+}
+.p-l-0{
+    cursor: pointer;
+    align-self: center;
+    margin: 0.2rem 0.5rem;
+    font-size: 1.4rem;
+}
+.em-l-0{
+    flex: 5;
+    /* border: var(--border); */
+}
+.p-l-1{
+    cursor: pointer;
+    align-self: center;
+    margin: 0.2rem 0.5rem;
+    font-size: 1.4rem;
+}
+.p-l-2{
+    cursor:pointer;
+    align-self: center;
+    margin: 0.2rem 0.5rem;
+    margin-right: 0;
+    font-size: 1.4rem;
+}
+.p-l-3{
+    cursor:pointer;
+    align-self: center;
+    margin: 0.2rem 0.5rem;
+    margin-left: 0;
+    font-size: 0.95rem;
+    font-family: var(--font_fam_open);
+}
