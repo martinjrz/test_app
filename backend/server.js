@@ -7,6 +7,7 @@ const cors=require('cors')
 const {graphqlHTTP}=require('express-graphql')
 const {buildSchema}=require('graphql')
 
+require('./UserModel/mongoose_setup')
 
 const server=express()
 const port=process.env.PORT || 5000
@@ -14,11 +15,22 @@ const port=process.env.PORT || 5000
 server.use(bodyparser.json())
 server.use(bodyparser.urlencoded({extended:true}))
 
+
 server.use(cors())
 server.use(cookie_parser())
 
-require('./UserModel/mongoose_setup')
+const resolvers=require('./resolvers/resolvers')
+const Schema=require('./schema/query_mutation')
 
+server.use('/graphqlserver',
+graphqlHTTP((request,response)=>({
+    schema:Schema,
+    graphiql:true,
+    rootValue:{
+          
+    }
+    
+})))
 
 
 // require('./test')
