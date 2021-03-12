@@ -4,6 +4,7 @@ const bodyparser=require('body-parser')
 const cookie_parser=require('cookie-parser')
 const cors=require('cors')
 const bcryptjs=require('bcryptjs')
+const jwt=require('jsonwebtoken')
 
 const {graphqlHTTP}=require('express-graphql')
 // const {buildSchema}=require('graphql')
@@ -17,11 +18,28 @@ server.use(bodyparser.json())
 server.use(bodyparser.urlencoded({extended:true}))
 
 
-server.use(cors())
+server.use(cors(
+    {
+        credentials:true,
+        origin:"http://localhost:3000",
+        methods:['post','put','get','delete']
+    }
+))
+
+const secretkey=`asdfadsfdfk@&*%&^%^
+*@&*&dhfhadsjfh
+a&^&*^%&%^&766767
+6123GH&&
+^&%*dshfdshg`
+const createToken=async (_id,secretkey,_expt)=>{
+ return await jwt.sign({_id_:_id},secretkey,{expiresIn:_expt})
+   
+}
+
 server.use(cookie_parser())
 
-const Mobileuser=require('./UserModel/user_schema')
-
+const {Mobileuser}=require('./UserModel/user_schema')
+const {Googleuser}=require('./UserModel/google_user_schema')
 
 const Schema=require('./schema/query_mutation')
 
@@ -30,40 +48,207 @@ graphqlHTTP((request,response)=>({
     schema:Schema,
     graphiql:true,
     rootValue:{
+
         //create mobile user
         createMobileuser:({username,password,mobile_no})=>{
+        
             try{
-                return  Mobileuser.findOne({phone_no:mobile_no}).then(user=>{
+                return Mobileuser.findOne({phone_no:mobile_no}).then(user=>{
                     if(user)
                     {
-                        throw new Error('user is already created!')
+                    throw new Error('user is already created!')
                     }
                     else {
-                      return   bcryptjs.genSalt(12,(err,salt)=>{
-                      return   bcryptjs.hash(password,salt,(err,hashedpassword)=>{
-                                return Mobileuser({
+                       return bcryptjs.genSalt(12).then(salt=>{
+                          return   bcryptjs.hash(password,salt).then(hashedpassword=>{
+                                return new Mobileuser({ 
                                     username:username,
                                     password:hashedpassword,
-                                    phone_no:mobile_no
-                                }).save().then(saved_user=>{
-                                    console.log(saved_user)
-                                    
-                                }).catch(err=>{
-                                    throw new Error(err)
-                                })
+                                    phone_no:mobile_no}).save().then(res=>{
+                                    const {username}=res._doc
+                                    return {username}
+                                    })
                             })
-                        })
-                    
-                    }
+                        })   
+                    }  
                 })
             }
             catch(err){
                 console.log(err)
+                throw err
             }
         },
-        // signed in mobile users
-        signedInMobileusers:()=>{
+        //signed in mobile users
+        signedInMobileusers:({mobile_no,pass})=>{
+            try{
+                return Mobileuser.findOne({phone_no:mobile_no}).then(founduser=>{
+                    if(founduser){
+                        const {password,username,_id}=founduser._doc
+                       return bcryptjs.compare(pass,password).then(ismatched=>{
+                            if(ismatched)
+                            {
+                                
+                       return  createToken(_id,secretkey,'10h').then(res=>{
+                              response.cookie('__rt',res,{httpOnly:true,secure:'lax',maxAge:36000000})
+                              return Mobileuser.findByIdAndUpdate(_id,{$push:{refreshToken:res}}).then(()=>{
+                                   return  createToken(_id,secretkey,'1h').then(res=>{
+                            response.cookie('__atidk',res,{httpOnly:true,secure:'lax',maxAge:360000})
+                            return {username}
+                         })
+                                 
+                              })
+                          })
+                     
+                        
+                              
+                            }
+                            else return {username:null}
+                        })
+                    }
+                    else {
+                        throw new Error('user not found')
+                    }
+                })
+            }
+            catch(err)
+            {
+                throw new Error(err)
+            }
+        },
 
+        signedInGoogleusers:async({email})=>{
+            try{
+                return Googleuser.findOne({email:email}).then(result=>{
+                    if(result)
+                    {
+                        const {username,_id}=result._doc
+                       
+                        createToken(_id,secretkey,'10h').then(res=>{
+                            response.cookie('__rt',res,{httpOnly:true,secure:'lax',maxAge:36000000})
+                        })
+                        createToken(_id,secretkey,'1h').then(res=>{ 
+                            response.cookie('__atidk',res,{httpOnly:true,secure:'lax',maxAge:3600000})
+                        })
+                        return {username}
+                    }
+                    else {
+                        throw new Error('user is not found')
+                    }
+                })
+            }catch(err)
+            {
+                throw new Error(err)
+            }
+                },
+        createGoogleuser:async({email,username})=>{
+            try{
+             return await  Googleuser.findOne({email:email}).then(result=>{
+                    if(result)
+                    throw new Error('user is already taken')
+                
+                    else {
+                        return new Googleuser({
+                            email:email,
+                            username:username
+                        })
+                        .save()
+                        .then(_saved_user=>{
+                            console.log(_saved_user)
+                            const {username}=_saved_user._doc
+                            console.log(username)
+                            return {username}
+                        })
+                    }
+                })
+            }
+            catch(err){
+                throw new Error(err)
+            }
+        },
+        getmobileuser:async()=>{
+            try{
+                const {__rt,__atidk} =request.cookies || null
+                if(__rt &&__atidk)
+                {
+                   return  jwt.verify(__rt,secretkey,(err,result)=>{
+                        if(err)
+                        throw new Error('refreshtoken is invalid')
+                        if(!result)
+                        {
+                            throw new Error('refreshtoken is expired')
+                        }
+                        else{
+                            const {_id_}=result
+                            return Mobileuser.findById({_id:_id_}).then((result)=>{
+                                if(result){
+                                    const {username,cart_value,refreshToken}=result._doc
+                                    if(refreshToken.includes(__rt))
+                                    {
+                                        return  jwt.verify(__atidk,secretkey,(err,result_1)=>{
+                                            if(err)
+                                            {
+                                                return createToken(_id_,secretkey,'1h').then(res=>{
+                                                    response.cookie('__atidk',res,{httpOnly:true,secure:"lax",maxAge:3600000})
+                                                    return {username:username,cart_value:cart_value}
+                                                })
+                                               
+                                            }
+                                            if(!result_1)
+                                            {
+                                                throw new Error('accesstoken is expired')
+                                            }
+                                            else{
+                                               return {username:username,cart_value:cart_value}
+                                            }
+                                        })
+                                    }
+                                    else{
+                                        throw new Error('not found')
+                                    }
+                                 
+                                }
+                                else {
+                                    return {username:"null",cart_value:23}
+                                }
+                            })
+                        
+                        }
+                        
+               
+                   })
+                }
+             if(__rt && !__atidk)
+                {
+                    return jwt.verify(__rt,secretkey,(err,res)=>{
+                        if(err)
+                        {
+                            throw new Error('invalid user')
+                        }
+                        if(res){
+                            const {_id_}=res
+                            return Mobileuser.findById({_id:_id_}).then(userfound=>{
+                                if(userfound){
+                                    const {username,cart_value,refreshToken,_id}=userfound._doc
+                                    if(refreshToken.includes(__rt)){
+                                        return  createToken(_id,secretkey,'1h').then(result=>{
+                                            response.cookie('__atidk',result,{httpOnly:true,secure:"lax",maxAge:3600000})
+                                            return {username:username,cart_value:cart_value}
+                                        })
+                                    }else{
+                                        console.log('invalid refreshtoken')
+                                        throw new Error('invalid refreshtoken')
+                                    }
+                                }
+                            })
+                        }
+                    }) 
+                }
+            
+            }
+            catch(err)
+            {
+                throw new Error(err)
+            }
         }
 
     }

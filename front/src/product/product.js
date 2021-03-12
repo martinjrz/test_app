@@ -1,28 +1,73 @@
 import React, { Component } from 'react'
-import {BiCartAlt} from 'react-icons/bi'
+import {BiCartAlt, BiLogOut} from 'react-icons/bi'
 import {AiOutlineUser} from 'react-icons/ai'
 import {HiMenuAlt2} from 'react-icons/hi'
 import {AiOutlinePlus} from 'react-icons/ai'
 import {AiOutlineMinus} from 'react-icons/ai'
 import './product.css'
 import img from './marsi.png'
+import {Link} from 'react-router-dom'
+import axios from 'axios'
 
 export default class Product extends Component {
+
 
     constructor(){
         super()
         this.price=250
         this.state={
             up_cart_no:0,
-            cart_no:10
-        }
+            cart_no:10,
+            render_page:false
+        } 
     }
-    render() {
+    reqtoserver=()=>{
+        const _qe_user={
+            query:`
+            query{
+                getmobileuser{
+                    username
+                    cart_value
+                }
+            }
+            `
+        }
+        axios({
+            url:'http://localhost:5000/graphqlserver',
+            data:_qe_user,
+            method:'post',
+            withCredentials:true,
+            headers:{
+                'Content-Type':'application/json'
+            }
+        }).then(res=>{
+            if(res.status===200 || res.status===201){
+                this.setState({
+                    render_page:true
+                })
+            }
+        })
+    }
+    componentDidMount(){
+    this.reqtoserver()
+    }
+    logout=()=>{
+        
+    }
+    render()  {
+      if(this.state.render_page)
         return (
             <div className='out-div-l'>
                 <div className='h-l-1'>
+                
                     <p className='p-l-0'><HiMenuAlt2 /></p>
                     <p className='em-l-0'></p>
+                    <div className='l-div-1'>
+                    <Link className='l-1' to='/home'>Home</Link>
+                    </div>
+                    <button 
+                    onClick={(e)=>this.logout(e)}
+                    className='l-o-1'>Logout</button>
                     <p className='p-l-1'><AiOutlineUser/></p>
                     <p className='p-l-2'><BiCartAlt/></p>
                     <p className='p-l-3'>{this.state.up_cart_no}</p>
@@ -66,15 +111,23 @@ export default class Product extends Component {
               </div>
                 </div>
                 </div>
-     <div>
-
+     {/* <div className='ret-l-1'> 
+     <p className='ret-l-p-1'>
+Want to be a retailer? Then fill the form 
+</p>
          <div>
-             
+          <form className='fo-l-1'>
+              <input className='re-in-l-2' placeholder='full name'>
+              </input>
+              <input className='re-in-l-2' placeholder='email/mobile_no'></input>
+              <input className='re-in-l-2' placeholder='location'></input>
+          </form>
          </div>
-     </div>
+     </div> */}
              
         
             </div>
         )
+        return <div></div>
     }
 }

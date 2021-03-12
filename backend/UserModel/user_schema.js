@@ -19,6 +19,9 @@ cart_value:{
 Cart_detail:[{
     type:mongoose.Schema.Types.ObjectId,
     ref:"Cart_detail"
+}],
+refreshToken:[{
+    type:String
 }]
 })
 module.exports.Mobileuser=mongoose.model("Mobileuser",MobileUserSchema)

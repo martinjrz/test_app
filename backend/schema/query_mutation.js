@@ -1,15 +1,25 @@
 const {buildSchema}=require('graphql')
 const Schema=buildSchema(`
+union _Mobile_user = Mobileuser | Server_error
+
 type Mobileuser{
 username:String!
 }
 type Googleuser{
 username:String!
 }
+type Server_error{
+    error:String!
+}
+type _user1{
+    username:String!
+    cart_value:Int!
+
+}
 type Rootquery{
-getuser:Mobileuser!
-readuser:String!
-readnum:Int!
+signedInMobileusers(mobile_no:String!,pass:String!):Mobileuser!
+signedInGoogleusers(email:String!):Googleuser!
+getmobileuser:_user1!
 }
 
 type Rootmutation{

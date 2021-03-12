@@ -1,20 +1,39 @@
-import React,{useEffect, useState} from 'react'
+import React,{useEffect, useState,useMemo} from 'react'
 import './signup.css'
 import {AiOutlineEye} from 'react-icons/ai'
 import {AiOutlineEyeInvisible} from 'react-icons/ai'
 import {Link} from 'react-router-dom'
+import  axios from 'axios'
 
 export const Signup=()=>{
+
     const [hidepass,showpass]=useState(false)
     const [hiderepass,showrepass]=useState(false)
     const [hide,show]=useState(true)
     const [hider,showr]=useState(true)
+
     const [pass,setpass]=useState('')
     const [repass,setrepass]=useState('')
     const [mn,setmn]=useState('')
     const [na,setna]=useState('')
+
     const password_ref=React.createRef()
     const repassword_ref=React.createRef()
+    const nameref=React.createRef()
+
+
+const postuser=async(data)=>{
+  return await  axios({
+        url:"http://localhost:5000/graphqlserver",
+        method:"POST",
+        data:data,
+        withCredentials:true,
+        headers:{
+            'Content-Type':'application/json'
+        }
+    })
+}
+
     const insertgapiscript=()=>{
         const script=document.createElement('script')
         script.src='https://apis.google.com/js/platform.js'
@@ -42,12 +61,30 @@ export const Signup=()=>{
         window.gapi.signin2.render('my-signin2',{width:180,height:32,onsuccess:async()=>{
             const user=window.gapi.auth2.getAuthInstance()
             const ex_user=user.currentUser.get().getBasicProfile().getName()
+            const ex_email=user.currentUser.get().getBasicProfile().getEmail()
             //console.log(ex_user)
+            const googleusermutation={
+                query:`
+                mutation{
+                    createGoogleuser(username:"${ex_user}",email:"${ex_email}"){
+                        username
+                    }
+                }
+                `
+            }
+            postuser(googleusermutation).then(res=>{
+                console.log(res)
+            })
         }})
     })
     }
+
+
+    // useeffect method
     useEffect(()=>{
-insertgapiscript()
+    
+        document.body.style.background='white'
+        insertgapiscript()
 
     })
 
@@ -105,16 +142,54 @@ insertgapiscript()
     
 
 }
+//change_name 
+const Name_setter=(e)=>{
+    setna(e.target.value)
+}
+const Mobile_no_setter=(e)=>{
+    setmn(e.target.value)
+}
+
+
+//submit the form 
+const submit_form=(e)=>{
+    e.preventDefault()
+    if(pass && repass && pass===repass && mn && na )
+    {
+        console.log('done')
+        const register_user={
+            query:`
+            mutation{
+                createMobileuser(username:"${na}",password:"${pass}",mobile_no:"${mn}"){
+                    username
+                }
+            }
+            `
+        }
+     postuser(register_user).then(response=>{
+            if(response.status!==200 && response.status!==201)
+            {
+                throw new Error('server error')
+            }
+            else {
+                // console.log(response)
+            }
+
+        })
+    }
+}
     return (
         <div className='div-1-l' >
-            <form className='div-form-l-1'>
+            <form className='div-form-l-1' onSubmit={(e)=>submit_form(e)}>
                 <p className='head-l-1'>Signup into account</p>
                 <div className='in-div-1'>
-                    <input className='in-1' placeholder='name'/> 
+                    <input ref={nameref} 
+                    onBlur={(e)=>Name_setter(e)}
+                    className='in-1' placeholder='name'/> 
                     <span></span>
                 </div>
                 <div className='in-div-3'>
-                    <input className='in-3' placeholder='mobile_no'/> 
+                    <input  onBlur={(e)=>Mobile_no_setter(e)} className='in-3' placeholder='mobile_no'/> 
                     <span></span>
                 </div>
                 <div 
@@ -154,7 +229,7 @@ insertgapiscript()
                     <button className='butt-1'>Signup</button>
                 </div>
                 <div >
-                <button id='my-signin2' className='google-signup'></button>
+                <button onSubmit={(e)=>submit_form(e)} id='my-signin2' className='google-signup'></button>
                 </div>
                 <div className='last-op-2'>
                     <p>Or already have an account?</p>

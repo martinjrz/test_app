@@ -1,7 +1,7 @@
 const mongoose =require('mongoose')
 const GoogleuserSchema=new mongoose.Schema({
 username:{
-    types:String,
+    type:String,
     required:true
 },
 email:{
@@ -15,6 +15,9 @@ cart_value:{
 Cart_detail:[{
     type:mongoose.Schema.Types.ObjectId,
     ref:"Google_cart_detail"
+}],
+refreshToken:[{
+    type:String
 }]
 })
 
