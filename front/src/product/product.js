@@ -8,7 +8,9 @@ import './product.css'
 import img from './marsi.png'
 import {Link} from 'react-router-dom'
 import axios from 'axios'
-
+import Cookie from 'universal-cookie'
+import  Loader from 'react-loader-spinner'
+const cookie=new Cookie()
 export default class Product extends Component {
 
 
@@ -17,12 +19,70 @@ export default class Product extends Component {
         this.price=250
         this.state={
             up_cart_no:0,
-            cart_no:10,
-            render_page:false
+            cart_no:0,
+            render_page:false,
+            ggormb:null
         } 
     }
-    reqtoserver=()=>{
-        const _qe_user={
+// request to google user
+    reqtoggleserver=(towhom)=>{
+        axios({
+            url:'http://localhost:5000/graphqlserver',
+            data:towhom,
+            method:'post',
+            withCredentials:true,
+            headers:{
+                'Content-Type':'application/json'
+            }
+        }).then(res=>{
+            if(res.status===200 || res.status===201){
+                const {username}=res.data.data.getgoogleuser
+                if(username==='jwt malformed'
+                 || username==='invalid token'
+                 || username==='jwt signature is required'
+                 ||username==='invalid signature' || username==='false')
+               window.location.replace('/signin')
+                else {
+                    this.setState({
+                        render_page:true
+                    })
+                }
+            }
+        })
+    }
+    //request to mobile user
+    reqtombleserver=(towhom)=>{
+        axios({
+            url:'http://localhost:5000/graphqlserver',
+            data:towhom,
+            method:'post',
+            withCredentials:true,
+            headers:{
+                'Content-Type':'application/json'
+            }
+        }).then(res=>{
+            if(res.status===200 || res.status===201){
+                const {username}=res.data.data.getmobileuser
+                if(username==='jwt malformed'
+                 || username==='invalid token'
+                 || username==='jwt signature is required'
+                 ||username==='invalid signature' || username==='false')
+               window.location.replace('/signin')
+                else {
+                    this.setState({
+                        render_page:true
+                    })
+                }
+            }
+        })
+    }
+    // when the page first render
+      async  componentDidMount(){
+   const mb__  =await cookie.get('mb_')
+        this.setState({
+            ggormb:mb__
+        })
+        const _qe_user1={
             query:`
             query{
                 getmobileuser{
@@ -31,31 +91,83 @@ export default class Product extends Component {
                 }
             }
             `
+        }  
+        const _qe_user2={
+            query:`
+            query{
+                getgoogleuser{
+                    username
+                    cart_value
+                }
+            }
+            `
+        }
+        if(!mb__)
+        {
+         window.location.replace('/signin')
+        }
+        else if(mb__)
+        {
+            if(this.state.ggormb==='true')
+            this.reqtombleserver(_qe_user1)
+            if(this.state.ggormb==='false')
+            this.reqtoggleserver(_qe_user2)
+        }
+
+    }
+    logout=()=>{
+        const _logout={
+            query:`
+            query{
+                logout_
+            }
+            `
         }
         axios({
-            url:'http://localhost:5000/graphqlserver',
-            data:_qe_user,
-            method:'post',
-            withCredentials:true,
+            url:"http://localhost:5000/graphqlserver",
+            method:"POST",
             headers:{
                 'Content-Type':'application/json'
+            },
+            withCredentials:true,
+            data:_logout
+        }).then(response=>{
+            if(response.status===200 || response.status===201)
+            {
+                const {logout_}=response.data.data
+                console.log(logout_)
+                if(logout_==='verified')
+                {
+                 window.location.replace('/signin')
             }
-        }).then(res=>{
-            if(res.status===200 || res.status===201){
-                this.setState({
-                    render_page:true
-                })
             }
         })
     }
-    componentDidMount(){
-    this.reqtoserver()
+
+    add_to_cart=()=>{
+        if(this.state.cart_no<10){
+            this.setState({
+                cart_no:1+this.state.cart_no
+            })
+        }
     }
-    logout=()=>{
-        
+    sub_to_cart=()=>{
+        if(this.state.cart_no>0)
+        {
+            this.setState({
+                cart_no:this.state.cart_no-1
+            })
+        }
+       
+    }
+    updateCart_value(){
+        this.setState({
+            up_cart_no:this.state.cart_no+this.state.up_cart_no
+        })
     }
     render()  {
-      if(this.state.render_page)
+        
+      if(this.state.render_page && this.state.ggormb!==null)
         return (
             <div className='out-div-l'>
                 <div className='h-l-1'>
@@ -85,16 +197,24 @@ export default class Product extends Component {
                      </div>
                 <div className='op-p-1'>
                     <div className='a-s-l-1'>
+                        <button className='b-c-l-1' onClick={()=>this.add_to_cart()}>
                         <AiOutlinePlus className='plux-1' />
-                        {this.state.cart_no}
-                        <AiOutlineMinus className='minux-1'/>
+                        </button>
+                       <p>
+                       {this.state.cart_no}
+                        </p>
+                        <button 
+                         className='b-c-l-2'
+                        onClick={()=>this.sub_to_cart()}>
+                        <AiOutlineMinus  className='minux-1'/>
+                        </button>
                     </div>
                     </div>
                     <div className='b-a-p-1'>
                         <button className='b-t-1'>
                             Buy now
                         </button>
-                        <button className='b-t-2'>
+                        <button onClick={()=>this.updateCart_value()} className='b-t-2'>
                             Add to cart
                         </button>
                   
@@ -128,6 +248,12 @@ Want to be a retailer? Then fill the form
         
             </div>
         )
-        return <div></div>
+        if(!this.state.render_page)
+        return <div className='loader'>
+            <Loader
+             type='MutatingDots'
+             width={100} 
+            />
+        </div>
     }
 }

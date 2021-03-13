@@ -16,6 +16,7 @@ export const Signup=()=>{
     const [repass,setrepass]=useState('')
     const [mn,setmn]=useState('')
     const [na,setna]=useState('')
+    const [rec_n,setresc_n]=useState(false)
 
     const password_ref=React.createRef()
     const repassword_ref=React.createRef()
@@ -59,6 +60,7 @@ const postuser=async(data)=>{
     window.gapi.load('signin2',()=>{
         
         window.gapi.signin2.render('my-signin2',{width:180,height:32,onsuccess:async()=>{
+            
             const user=window.gapi.auth2.getAuthInstance()
             const ex_user=user.currentUser.get().getBasicProfile().getName()
             const ex_email=user.currentUser.get().getBasicProfile().getEmail()
@@ -178,7 +180,8 @@ const submit_form=(e)=>{
         })
     }
 }
-    return (
+if(!rec_n)  
+return (
         <div className='div-1-l' >
             <form className='div-form-l-1' onSubmit={(e)=>submit_form(e)}>
                 <p className='head-l-1'>Signup into account</p>
@@ -238,4 +241,5 @@ const submit_form=(e)=>{
             </form>
         </div>
     )
+    else return <div></div>
 }

@@ -4,7 +4,9 @@ import {AiOutlineEye} from 'react-icons/ai'
 import {AiOutlineEyeInvisible} from 'react-icons/ai'
 import {Link} from 'react-router-dom'
 import axios from 'axios'
+import Cookie from 'universal-cookie'
 
+const cookie=new Cookie()
 export const Signin=()=>{
     const [hidepassword,showpassword]=useState(false)
     const [hide,show]=useState(true)
@@ -62,14 +64,28 @@ export const Signin=()=>{
                         }
                         `
                     }
-                    signedinuser(_em).then(res=>{
+                    signedinuser(_em)
+                    .then(res=>{
                         if(res.status!==201 && res.status!==200)
                            console.log('invalid user')
                            else 
                            {
-                               console.log(res)
-                              // window.location.replace('/home')
+                              return res.data
                            }
+                    })
+                    .then(finalresponse=>{
+                        const {username}=finalresponse.data.signedInGoogleusers
+                        if(username==='error' || username==='mobile_no invalid')
+                        {
+                      //  window.location.replace('/signin')
+                        }
+                        else 
+                        { 
+                            const date=new Date()
+                            const expiredate=date.setTime(date.getTime()+36000000)
+                            cookie.set('mb_','false',{path:'/',expires:new Date(expiredate)})
+                            window.location.replace('/home')
+                        }
                     })
                 }
             })
@@ -125,14 +141,27 @@ export const Signin=()=>{
                 }
                 `
             }
-          
+          const button=document.querySelector('#butt_')
+          button.disabled=true
             signedinuser(_da)
             .then(res=>{
                 if(res.status!==200 && res.status!==201)
                 console.log('invalid user')
                 else
                 {
-                    console.log(res)
+               return res.data
+                }
+            }).then(finalresponse=>{
+                const {username}=finalresponse.data.signedInMobileusers
+                if(username==='error' || username==='mobile_no invalid')
+                {
+              //  window.location.replace('/signin')
+                }
+                else 
+                { 
+                    const date=new Date()
+                    const expiredate=date.setTime(date.getTime()+36000000)
+                    cookie.set('mb_','true',{path:'/',expires:new Date(expiredate)})
                     window.location.replace('/home')
                 }
             })
@@ -170,7 +199,7 @@ export const Signin=()=>{
                 <div className='butt-div-1'>
                     <button 
                     onClick={(e)=>{signeduser(e)}}
-                    className='butt-1'>Signin</button>
+                   id='butt_' className='butt-1'>Signin</button>
                 </div>
                 <div >
                 <button 

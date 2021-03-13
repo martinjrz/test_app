@@ -16,10 +16,15 @@ type _user1{
     cart_value:Int!
 
 }
+type checker{
+    isauthen:String!
+}
 type Rootquery{
 signedInMobileusers(mobile_no:String!,pass:String!):Mobileuser!
 signedInGoogleusers(email:String!):Googleuser!
 getmobileuser:_user1!
+getgoogleuser:_user1!
+logout_:String!
 }
 
 type Rootmutation{
