@@ -26,10 +26,14 @@ getmobileuser:_user1!
 getgoogleuser:_user1!
 logout_:String!
 }
-
+type Cn_{
+    cn_value:Int!
+    uV_:String!
+}
 type Rootmutation{
 createMobileuser(username:String!,mobile_no:String!,password:String!):Mobileuser!
 createGoogleuser(username:String!,email:String!):Googleuser!
+addtocarter(cn__value:Int!):Cn_!
 }
 schema{
     query:Rootquery

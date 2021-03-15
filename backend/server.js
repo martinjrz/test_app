@@ -365,20 +365,100 @@ graphqlHTTP((request,response)=>({
             }
         },
         logout_:async()=>{
+            async function  deletecookies() {
+              await  response.clearCookie('__rt')
+               await response.clearCookie('__atidk')
+               await response.clearCookie('mb_')
+               await response.clearCookie('G_AUTHUSER_H')
+               return 'verified'   
+            }
+            async function  delete_rt_from_gg_datatbase(_id_,rt) {
+              const payloaduser= await Googleuser.findByIdAndUpdate({_id:_id_},{$pull:{refreshToken:rt}})
+              return payloaduser
+            }
+            async function  delete_rt_from_mb_datatbase(_id_,rt) {
+                const payloaduser= await Mobileuser.findByIdAndUpdate({_id:_id_},{$pull:{refreshToken:rt}})
+                return payloaduser
+              }
             const {__rt,__atidk,mb_}=request.cookies
             if(__rt && __atidk && mb_){
-            const payload=await jwt.verify(__rt,secretkey,async (err,payload)=>{
+            return jwt.verify(__rt,secretkey,async (err,payload)=>{
                 if(err)
                     return err.message 
                 else if(payload) {
-                    await response.clearCookie('__rt')
-                   await response.clearCookie('__atidk')
-                    await response.clearCookie('mb_')
-                    return 'verified'
+                    const {_id_}=payload
+                    if(mb_==='true')
+                    {
+                        return delete_rt_from_mb_datatbase(_id_,__rt).then(()=>{
+                            return deletecookies().then((res)=>{
+                                return res
+                        })
+                         
+                          }) 
+                    }
+                    else if(mb_==='false')
+                  return delete_rt_from_gg_datatbase(_id_,__rt).then(()=>{
+                      return deletecookies().then((res)=>{
+                          return res
+                  })
+                   
+                    })
+                    
                 }
                 else return 'null'
             })
-             return payload
+        
+            }
+        },
+        addtocarter:async({cn__value})=>{ 
+
+          const findgoogleuser=(_id_)=>{
+          
+                return new Promise(async(resolve,reject)=>{
+                   const googleuser=await Googleuser.findById({_id:_id_})
+                 
+                   if(googleuser)
+                   {
+                       resolve(googleuser)
+                   }
+                   else{
+                       reject(null)
+                   } 
+                })
+            }
+
+            try{
+                const {mb_,__rt,__atidk}=request.cookies
+                if(mb_ && __rt){
+                 return jwt.verify(__rt,secretkey,async(err,payload)=>{
+                        if(err)
+                        console.log(err)
+                        else if(payload)
+                        {
+                            const {_id_}=payload
+                            if(mb_==='true')
+                            {
+                            const mobileuser=Mobileuser.findById({_id:_id_})
+                            }
+                            else if(mb_==='false'){
+                               return  findgoogleuser(_id_).then(async user_payload=>{
+                                    const {refreshToken}=user_payload
+                                   if(refreshToken.includes(__rt)){
+                                     user_payload.cart_value=cn__value
+                                     await user_payload.save()
+                                     return {cn_value:user_payload.cart_value,uV_:"null"}
+                                   }
+                                })
+                            }
+                          
+                        }
+                    })
+          
+                }
+            }
+            catch(err)
+            {
+                return {cn_value:0,uV_:"null"}
             }
         }
 

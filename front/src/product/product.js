@@ -11,8 +11,8 @@ import axios from 'axios'
 import Cookie from 'universal-cookie'
 import  Loader from 'react-loader-spinner'
 const cookie=new Cookie()
-export default class Product extends Component {
 
+export default class Product extends Component {
 
     constructor(){
         super()
@@ -21,7 +21,8 @@ export default class Product extends Component {
             up_cart_no:0,
             cart_no:0,
             render_page:false,
-            ggormb:null
+            ggormb:null,
+            actual_cart_value:0
         } 
     }
 // request to google user
@@ -36,7 +37,7 @@ export default class Product extends Component {
             }
         }).then(res=>{
             if(res.status===200 || res.status===201){
-                const {username}=res.data.data.getgoogleuser
+                const {username,cart_value}=res.data.data.getgoogleuser
                 if(username==='jwt malformed'
                  || username==='invalid token'
                  || username==='jwt signature is required'
@@ -44,7 +45,9 @@ export default class Product extends Component {
                window.location.replace('/signin')
                 else {
                     this.setState({
-                        render_page:true
+                        render_page:true,
+                        up_cart_no:cart_value,
+                        actual_cart_value:cart_value
                     })
                 }
             }
@@ -70,7 +73,8 @@ export default class Product extends Component {
                window.location.replace('/signin')
                 else {
                     this.setState({
-                        render_page:true
+                        render_page:true,
+                       
                     })
                 }
             }
@@ -79,7 +83,7 @@ export default class Product extends Component {
     // when the page first render
       async  componentDidMount(){
    const mb__  =await cookie.get('mb_')
-        this.setState({
+     await this.setState({
             ggormb:mb__
         })
         const _qe_user1={
@@ -113,15 +117,28 @@ export default class Product extends Component {
             if(this.state.ggormb==='false')
             this.reqtoggleserver(_qe_user2)
         }
-
+this.insertgapiserver()
     }
+
+    Requestoserver=async(type_of_request)=>{
+const data=await axios({
+            method:"POST",
+            url:"http://localhost:5000/graphqlserver",
+            withCredentials:true,
+            headers:{
+                'Content-Type':'application/json'
+            },
+            data:type_of_request
+        })    
+  return data;
+    }
+
     logout=()=>{
         const _logout={
             query:`
             query{
                 logout_
-            }
-            `
+            }`
         }
         axios({
             url:"http://localhost:5000/graphqlserver",
@@ -138,12 +155,42 @@ export default class Product extends Component {
                 console.log(logout_)
                 if(logout_==='verified')
                 {
+                    
                  window.location.replace('/signin')
             }
             }
         })
     }
-
+    insertgapiserver(){
+        const script=document.createElement('script')
+        script.src='https://apis.google.com/js/platform.js'
+        script.onload=async()=>{
+            await this.initialize()
+        }
+        document.body.appendChild(script)
+    }
+    initialize=()=>{
+        window.gapi.load('auth2',()=>{
+            window.gapi.auth2.init({
+                client_id:'262576652815-te31jdsgf459fu8j931mtphgv3t2ng85.apps.googleusercontent.com',
+                cookiepolicy: 'single_host_origin',
+            })
+           // const user__=window.gapi.auth2.getAuthInstance().currentUser.get().getBasicProfile().getName()
+            // window.gapi.auth2.logout()
+            // console.log(user__)
+        })
+        
+        // window.gapi.load('signin2',()=>{
+        //     window.gapi.signin2.render('',{
+        //         onsuccess:()=>{
+        //             const user__=window.gapi.auth2
+        //             console.log(user__)
+        //         }
+        //     })
+        // })
+       
+        
+    }
     add_to_cart=()=>{
         if(this.state.cart_no<10){
             this.setState({
@@ -160,10 +207,34 @@ export default class Product extends Component {
         }
        
     }
-    updateCart_value(){
-        this.setState({
-            up_cart_no:this.state.cart_no+this.state.up_cart_no
+
+   async updateCart_value(){    
+         await this.setState({
+            up_cart_no:this.state.cart_no + this.state.up_cart_no
         })
+        const typeof_req={
+            query:`
+            mutation{
+                addtocarter(cn__value:${this.state.up_cart_no}){
+                    cn_value
+                }
+            }
+            `
+        }
+    
+              if(this.state.cart_no>=1)
+              {
+      this.Requestoserver(typeof_req)
+      .then(responseback=>{
+            if(responseback.status===201 || responseback.status===200)
+            {
+                const {cn_value}=responseback.data.data.addtocarter
+               this.setState({
+                  actual_cart_value:cn_value
+               })
+            }})}
+    
+
     }
     render()  {
         
@@ -182,7 +253,7 @@ export default class Product extends Component {
                     className='l-o-1'>Logout</button>
                     <p className='p-l-1'><AiOutlineUser/></p>
                     <p className='p-l-2'><BiCartAlt/></p>
-                    <p className='p-l-3'>{this.state.up_cart_no}</p>
+                    <p className='p-l-3'>{this.state.actual_cart_value}</p>
                 </div>
                 <div className='ace-div-1'>
                 <div className='im-r-1'>
@@ -251,8 +322,9 @@ Want to be a retailer? Then fill the form
         if(!this.state.render_page)
         return <div className='loader'>
             <Loader
-             type='MutatingDots'
-             width={100} 
+             type='Bars'
+             width={80} 
+             height={40}
             />
         </div>
     }
