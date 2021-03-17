@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { BiCartAlt, BiLogOut } from "react-icons/bi";
+import { BiCartAlt } from "react-icons/bi";
 import { AiOutlineUser } from "react-icons/ai";
 import { HiMenuAlt2 } from "react-icons/hi";
 import { AiOutlinePlus } from "react-icons/ai";
@@ -7,11 +7,11 @@ import { AiOutlineMinus } from "react-icons/ai";
 import "./product.css";
 import img from "./marsi.png";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import Cookie from "universal-cookie";
 import Loader from "react-loader-spinner";
 import base from "../baseurl";
-
+import { gapisetup } from "../gapiserver";
+import { scriptsetup } from "../gapiserver";
 const cookie = new Cookie();
 
 export default class Product extends Component {
@@ -24,19 +24,13 @@ export default class Product extends Component {
       render_page: false,
       ggormb: null,
       actual_cart_value: 0,
+      initialmb_state: null,
     };
   }
+
   // request to google user
   reqtoggleserver = (towhom) => {
-    axios({
-      url: "http://localhost:5000/graphqlserver",
-      data: towhom,
-      method: "post",
-      withCredentials: true,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }).then(async (res) => {
+    base.post("/graphqlserver", towhom).then(async (res) => {
       if (res.status === 200 || res.status === 201) {
         const { username, cart_value } = res.data.data.getgoogleuser;
         if (
@@ -45,9 +39,16 @@ export default class Product extends Component {
           username === "jwt signature is required" ||
           username === "invalid signature" ||
           username === "false"
-        )
-          window.location.replace("/signin");
-        else {
+        ) {
+          const script=await scriptsetup()
+          script.onload=async()=>{
+            const gapiserver=await gapisetup()
+            const authinstance=gapiserver.auth2.getAuthInstance()
+            authinstance.signOut()
+            window.location.replace("/signin")
+          }
+         document.body.appendChild(script)   
+        } else {
           await this.setState({
             render_page: true,
             up_cart_no: cart_value,
@@ -59,55 +60,19 @@ export default class Product extends Component {
     });
   };
   // insert the gapi server
-  insertgapiserver() {
-    const script = document.createElement("script");
-    script.src = "https://apis.google.com/js/platform.js";
+  async insertgapiserver() {
+    const script = await scriptsetup();
     script.onload = async () => {
-      this.initialize().then((res) => {
-        if (res)
-          console.log(
-            res.getAuthInstance().currentUser.get().getBasicProfile().getName()
-          );
-      });
+      const data = await gapisetup();
+      console.log(data);
     };
     document.body.appendChild(script);
   }
-  // intialization of google auth
-  initialize = () => {
-    return new Promise((resolve, reject) => {
-      window.gapi.load("auth2", () => {
-        window.gapi.auth2
-          .init({
-            client_id:
-              "262576652815-te31jdsgf459fu8j931mtphgv3t2ng85.apps.googleusercontent.com",
-            cookiepolicy: "single_host_origin",
-          })
-          .then((res) => {
-            if (res) {
-              resolve(window.gapi.auth2);
-            } else reject(null);
-          });
-
-        // const user__=window.gapi.auth2.getAuthInstance().currentUser.get().getBasicProfile().getName()
-        // window.gapi.auth2.logout()
-        // console.log(user__)
-      });
-    });
-  };
-
   //request to mobile user
   reqtombleserver = (towhom) => {
-    axios({
-      url: "http://localhost:5000/graphqlserver",
-      data: towhom,
-      method: "post",
-      withCredentials: true,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }).then(async (res) => {
+    base.post("/graphqlserver", towhom).then(async (res) => {
       if (res.status === 200 || res.status === 201) {
-        const { username } = res.data.data.getmobileuser;
+        const { username,cart_value} = res.data.data.getmobileuser;
         if (
           username === "jwt malformed" ||
           username === "invalid token" ||
@@ -115,27 +80,20 @@ export default class Product extends Component {
           username === "invalid signature" ||
           username === "false"
         ) {
-          if (cookie.get("G_AUTHUSER_H")) {
-            const script = document.createElement("script");
-            script.src = "https://apis.google.com/js/platform.js";
+            const script = await scriptsetup();
             script.onload = async () => {
-              window.gapi.load("auth2", async () => {
-                window.gapi.auth2.init({
-                  client_id:
-                    "262576652815-te31jdsgf459fu8j931mtphgv3t2ng85.apps.googleusercontent.com",
-                  cookiepolicy: "single_host_origin",
-                });
-                const authinstance = await window.gapi.auth2.getAuthInstance();
-                console.log(authinstance);
-                authinstance.signOut();
-                window.location.replace("/signin");
-              });
-            };
+              const gapiserver = await gapisetup();
+              const authinstance = gapiserver.auth2.getAuthInstance();
+              if(authinstance.currentUser.get().getBasicProfile())
+              authinstance.signOut();
+              window.location.replace("/signin");
+             };
             document.body.appendChild(script);
-          } else window.location.replace("/signin");
         } else {
           this.setState({
             render_page: true,
+            up_cart_no: cart_value,
+            actual_cart_value: cart_value,
           });
         }
       }
@@ -145,6 +103,7 @@ export default class Product extends Component {
   // when the page first render
   async componentDidMount() {
     const mb__ = await cookie.get("mb_");
+
     await this.setState({
       ggormb: mb__,
     });
@@ -170,31 +129,53 @@ export default class Product extends Component {
     };
 
     const signOut_Guser = async function () {
-      window.gapi.auth2.init({
-        client_id:
-          "262576652815-te31jdsgf459fu8j931mtphgv3t2ng85.apps.googleusercontent.com",
-        cookiepolicy: "single_host_origin",
-      });
-      const authinstance = await window.gapi.auth2.getAuthInstance();
-      console.log(authinstance.currentUser.get().getBasicProfile());
+      const gapiserver = await gapisetup();
+      const authinstance = gapiserver.auth2.getAuthInstance();
       authinstance.signOut();
       window.location.replace("/signin");
-    }
-    if (!mb__ ) {
+    };
+
+    if (!mb__) {
       const verified_query = {
         query: `
           query{
             mb__verification
           }
           `,
-      }
+      };
       const payload_mb = await base.post("/graphqlserver", verified_query);
       const mb_verification = payload_mb.data.data.mb__verification;
       console.log(payload_mb.data.data.mb__verification);
       if (mb_verification === "unverified_mb") {
+          const script = await scriptsetup();
+          script.onload = async () => {
+            window.gapi.load("auth2", async () => {
+              signOut_Guser();
+            });
+          };
+          document.body.appendChild(script);
+          
+         
+        // else {
+        // }
+      }
+    } else if (mb__ === "true" || mb__ === "false") {
+      if (this.state.ggormb === "true") this.reqtombleserver(_qe_user1);
+      if (this.state.ggormb === "false") this.reqtoggleserver(_qe_user2);
+    } else {
+      const verified_query = {
+        query: `
+          query{
+            mb__verification
+          }
+          `,
+      };
+      const payload_mb = await base.post("/graphqlserver", verified_query);
+      const mb_verification = payload_mb.data.data.mb__verification;
+      console.log(mb_verification);
+      if (mb_verification === "unverified_mb") {
         if (cookie.get("G_AUTHUSER_H")) {
-          const script = document.createElement("script");
-          script.src = "https://apis.google.com/js/platform.js";
+          const script = await scriptsetup();
           script.onload = async () => {
             window.gapi.load("auth2", async () => {
               signOut_Guser();
@@ -202,56 +183,17 @@ export default class Product extends Component {
           };
           document.body.appendChild(script);
         } else {
-           window.location.replace("/signin");
-        }
-      }
-    } else if (mb__ === "true" || mb__ === "false") {
-      if (this.state.ggormb === "true") this.reqtombleserver(_qe_user1);
-      if (this.state.ggormb === "false") this.reqtoggleserver(_qe_user2);
-    }
-    else {
-      const verified_query = {
-        query: `
-          query{
-            mb__verification
-          }
-          `,
-      }
-      const payload_mb = await base.post("/graphqlserver", verified_query);
-      const mb_verification = payload_mb.data.data.mb__verification;
-      console.log(mb_verification);
-      if(mb_verification==='unverified_mb')
-      {
-        if (cookie.get("G_AUTHUSER_H")) {
-          const script = document.createElement("script");
-          script.src = "https://apis.google.com/js/platform.js";
-          script.onload = async () => {
-            window.gapi.load("auth2", async () => {
-              signOut_Guser();
-            });
-          };
-          document.body.appendChild(script);
-        } 
-        else {
-          window.location.replace('/signin')
+          window.location.replace("/signin");
         }
       }
     }
   }
 
   Requestoserver = async (type_of_request) => {
-    const data = await axios({
-      method: "POST",
-      url: "http://localhost:5000/graphqlserver",
-      withCredentials: true,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      data: type_of_request,
-    });
+    const data = await base.post("/graphqlserver", type_of_request);
     return data;
   };
-
+  //logout user
   logout = () => {
     const _logout = {
       query: `
@@ -259,30 +201,19 @@ export default class Product extends Component {
                 logout_
             }`,
     };
-    axios({
-      url: "http://localhost:5000/graphqlserver",
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      withCredentials: true,
-      data: _logout,
-    }).then((response) => {
+    base.post("/graphqlserver", _logout).then(async (response) => {
       if (response.status === 200 || response.status === 201) {
         const { logout_ } = response.data.data;
         if (logout_ === "verified_g_auth") {
-          this.initialize().then(async (payload_googleuser) => {
-            if (payload_googleuser) {
-              console.log(payload_googleuser);
-              const getinstance = await payload_googleuser.getAuthInstance();
-              getinstance.signOut();
-              window.location.replace("/signin");
-            }
-          });
-        }
-        else if(logout_==='verified_mb_auth')
-        {
+          const gapiserver = await gapisetup();
+          const authinstance = gapiserver.auth2.getAuthInstance();
+          authinstance.signOut();
           window.location.replace("/signin");
+        } else if (logout_ === "verified_mb_auth") {
+          window.location.replace("/signin");
+        }
+        else {
+          window.location.reload()
         }
       }
     });
@@ -312,6 +243,7 @@ export default class Product extends Component {
             mutation{
                 addtocarter(cn__value:${this.state.up_cart_no}){
                     cn_value
+                    uV_
                 }
             }
             `,
@@ -320,10 +252,17 @@ export default class Product extends Component {
     if (this.state.cart_no >= 1) {
       this.Requestoserver(typeof_req).then((responseback) => {
         if (responseback.status === 201 || responseback.status === 200) {
-          const { cn_value } = responseback.data.data.addtocarter;
-          this.setState({
-            actual_cart_value: cn_value,
-          });
+          const { cn_value,uV_} = responseback.data.data.addtocarter;
+          if(uV_==='ok')
+          {
+            this.setState({
+              actual_cart_value: cn_value,
+            });
+          }
+         else if(uV_==='null')
+         {
+           window.location.reload()
+         }
         }
       });
     }

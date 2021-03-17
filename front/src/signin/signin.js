@@ -3,10 +3,11 @@ import "./signin.css";
 import { AiOutlineEye } from "react-icons/ai";
 import { AiOutlineEyeInvisible } from "react-icons/ai";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import Cookie from "universal-cookie";
 import base from "../baseurl";
 import Loader from "react-loader-spinner";
+import { gapisetup } from "../gapiserver";
+import { scriptsetup } from "../gapiserver";
 const cookie = new Cookie();
 
 export const Signin = () => {
@@ -31,110 +32,82 @@ export const Signin = () => {
   const [mn_, setmn_] = useState("");
   const password_ref = React.createRef();
 
-  const insertgapiscript = () => {
-    const script = document.createElement("script");
-    script.src = "https://apis.google.com/js/platform.js";
+  const insertgapiscript = async () => {
+    const script = await scriptsetup();
     script.onload = async () => {
-      await initialize();
+      const gapiserver = await gapisetup();
+      gapiserver.load("signin2", () => {
+        gapiserver.signin2.render("g-signin", {
+          width: 180,
+          height: 32,
+          onsuccess: async () => {
+            const user = gapiserver.auth2.getAuthInstance();
+            const ex_email = user.currentUser
+              .get()
+              .getBasicProfile()
+              .getEmail();
+            // console.log(ex_user)
+            const _em = {
+              query: `
+                          query{
+                              signedInGoogleusers(email:"${ex_email}"){
+                                  username
+                              }
+                          }
+                          `,
+            };
+            signedinuser(_em)
+              .then((res) => {
+                if (res.status !== 201 && res.status !== 200)
+                  console.log("invalid user");
+                else {
+                  return res.data;
+                }
+              })
+              .then(async (finalresponse) => {
+                const { username } = finalresponse.data.signedInGoogleusers;
+                if (username === "error" || username === "email not found") {
+                  await gapiserver.auth2.getAuthInstance().signOut();
+                  // window.location.replace('/signin')
+                } else {
+                  const date = new Date();
+                  const expiredate = date.setTime(date.getTime() + 36000000);
+                  cookie.set("mb_", "false", {
+                    path: "/",
+                    expires: new Date(expiredate),
+                  });
+                  window.location.replace("/home");
+                }
+              });
+          },
+        });
+      });
     };
     document.body.appendChild(script);
   };
 
   const signedinuser = async (data) => {
-    return await axios({
-      url: "http://localhost:5000/graphqlserver",
-      method: "POST",
-      data: data,
-      timeout: 50000,
-      withCredentials: true,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const result = await base.post("/graphqlserver", data);
+    return result;
   };
 
-  const initialize = () => {
-    new Promise((resolve, reject) => {
-      window.gapi.load("auth2", () => {
-        window.gapi.auth2
-          .init({
-            client_id:
-              "262576652815-te31jdsgf459fu8j931mtphgv3t2ng85.apps.googleusercontent.com",
-            cookiepolicy: "single_host_origin",
-          })
-          .then((res_user) => {
-            // console.log(res_user)
-            // if(res_user)
-            // window.gapi.auth2.getAuthInstance().signOut()
-            window.gapi.load("signin2", () => {
-              window.gapi.signin2.render("g-signin", {
-                width: 180,
-                height: 32,
-                onsuccess: async () => {
-                  const user = window.gapi.auth2.getAuthInstance();
-                  const ex_email = user.currentUser.get().getBasicProfile().getEmail();
-                  // console.log(ex_user)
-                  const _em = {
-                    query: `
-                                query{
-                                    signedInGoogleusers(email:"${ex_email}"){
-                                        username
-                                    }
-                                }
-                                `,
-                  };
-                  signedinuser(_em)
-                    .then((res) => {
-                      if (res.status !== 201 && res.status !== 200)
-                        console.log("invalid user");
-                      else {
-                        return res.data;
-                      }
-                    })
-                    .then(async (finalresponse) => {
-                      const { username } = finalresponse.data.signedInGoogleusers;
-                      if (username === "error" || username === "email not found") {
-                        await window.gapi.auth2.getAuthInstance().signOut()
-                        // window.location.replace('/signin')
-                      } else {
-                        const date = new Date();
-                        const expiredate = date.setTime(date.getTime() + 36000000);
-                        cookie.set("mb_", "false", {
-                          path: "/",
-                          expires: new Date(expiredate),
-                        });
-                       window.location.replace("/home");
-                      }
-                    })
-                },
-              })
-            })
-          });
-      });
-    });
-    
-
-  }
   // use effect method
   useEffect(async () => {
     document.body.style.background = "white";
     const _req = new ReqtoServer();
-   await  _req.render_payload().then((res) => {
+    await _req.render_payload().then((res) => {
       if (res.status === 200 || res.status === 201) {
         const { rendersigninOrnot } = res.data.data;
         if (rendersigninOrnot === "true") {
           setrender(true);
-          console.log(rendersigninOrnot);
         } else if (rendersigninOrnot === "false") {
           console.log(rendersigninOrnot);
           window.location.replace("/home");
         } else setrender(true);
       }
     });
-   
     insertgapiscript();
-
-  });
+  },[]);
 
   // object funtion
 
@@ -188,28 +161,21 @@ export const Signin = () => {
       button.disabled = true;
       signedinuser(_da)
         .then((res) => {
-          if (res.status !== 200 && res.status !== 201)
-            console.log("invalid user");
-          else {
-            return res.data;
+          if(res.status===201 || res.status===200) {
+            const { username } = res.data.data.signedInMobileusers;
+            if (username === "mobile_no not found" || username === "wrong password") {
+               window.location.replace("/signin");
+            } else {
+              const date = new Date();
+              const expiredate = date.setTime(date.getTime() + 36000000);
+              cookie.set("mb_", "true", {
+                path: "/",
+                expires: new Date(expiredate),
+              });
+              window.location.replace("/home");
+            }
           }
         })
-        .then((finalresponse) => {
-          const { username } = finalresponse.data.signedInMobileusers;
-          if (username === "error" || username === "mobile_no invalid") {
-            //  window.location.replace('/signin')
-          } else {
-            const date = new Date();
-            const expiredate = date.setTime(date.getTime() + 36000000);
-            cookie.set("mb_", "true", {
-              path: "/",
-              expires: new Date(expiredate),
-            });
-            window.location.replace("/home");
-          }
-        });
-    } else {
-      console.log("invalid");
     }
   };
   if (render)

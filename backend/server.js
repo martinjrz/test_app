@@ -52,7 +52,7 @@ server.use(
         try {
           return Mobileuser.findOne({ phone_no: mobile_no }).then((user) => {
             if (user) {
-              throw new Error("user is already created!");
+              return { username: "mobile no. is already in use" };
             } else {
               return bcryptjs.genSalt(12).then((salt) => {
                 return bcryptjs.hash(password, salt).then((hashedpassword) => {
@@ -71,8 +71,7 @@ server.use(
             }
           });
         } catch (err) {
-          console.log(err);
-          throw err;
+          return { username: "server error" };
         }
       },
       //signed in mobile users
@@ -112,13 +111,12 @@ server.use(
             }
           );
         } catch (err) {
-          throw new Error(err);
+          return { username: "server error" };
         }
       },
       // signed in google users
       signedInGoogleusers: async ({ email }) => {
         try {
-          console.log(request)
           return Googleuser.findOne({ email: email }).then((result) => {
             if (result) {
               const { username, _id } = result._doc;
@@ -146,7 +144,7 @@ server.use(
             }
           });
         } catch (err) {
-          throw new Error(err);
+          return { username: "server error" };
         }
       },
       //creation of google users;
@@ -154,7 +152,7 @@ server.use(
         try {
           return Googleuser.findOne({ email: email }).then((result) => {
             if (result) {
-              throw new Error("user is already taken");
+              return { username: "gmail is already in use" };
             } else {
               return new Googleuser({
                 email: email,
@@ -170,16 +168,19 @@ server.use(
             }
           });
         } catch (err) {
-          throw new Error(err);
+          return { username: "server error" };
         }
       },
       //get mobile users
       getmobileuser: () => {
         try {
-          const { __rt, __atidk } = request.cookies || null;
-          if (__rt && __atidk) {
+          const { __rt, __atidk, mb_ } = request.cookies || null;
+          if (__rt && __atidk && mb_) {
             return jwt.verify(__rt, secretkey, (err, result) => {
-              if (err) return { username: "false", cart_value: 0 };
+              if (err) {
+                remove_cookie(response)
+                return { username: "false", cart_value: 0 };
+              }
               if (!result) {
                 return { username: "false", cart_value: 0 };
               } else {
@@ -195,8 +196,10 @@ server.use(
                             err.message === "jwt malformed" ||
                             err.message === "jwt signature is required" ||
                             err.message === "invalid signature"
-                          )
+                          ) {
+                            remove_cookie(response)
                             return { username: err.message, cart_value: 0 };
+                          }
                           return createToken(_id_, secretkey, "1h").then(
                             (res) => {
                               response.cookie("__atidk", res, {
@@ -221,27 +224,7 @@ server.use(
                       return { username: "false", cart_value: 0 };
                     }
                   } else {
-                    response.clearCookie("__rt");
-                    response.clearCookie("__atidk");
-                    response.clearCookie("mb_");
-
-                    // response.clearCookie("__Secure-3PAPISID")
-                    // response.clearCookie("__Secure-3PSIDCC")
-                    // response.clearCookie("SAPISID")
-                    // response.clearCookie("APISID")
-                    // response.clearCookie("SID")
-                    // response.clearCookie("HSID")
-                    // response.clearCookie("SSID")
-                    // response.clearCookie("SIDCC")
-                    // // response.clearCookie("__Secure-3PSIDCC")
-                    // response.clearCookie("__Secure-3PSID")
-                    // response.clearCookie("__Secure-3PAPISID")
-                    // response.clearCookie("__Secure-3PAPISID")
-                    // response.clearCookie("__Secure-3PAPISID")
-                    // response.clearCookie("__Secure-3PAPISID")
-                    // response.clearCookie("__Secure-3PAPISID")
-                    // response.clearCookie("__Secure-3PAPISID")
-                    // response.clearCookie("__Secure-3PAPISID")
+                    remove_cookie(response)
                     return { username: "false", cart_value: 0 };
                   }
                 });
@@ -249,9 +232,10 @@ server.use(
             });
           }
           // if only accesstoken is available
-          if (__rt && !__atidk) {
+          if (__rt && !__atidk && mb_) {
             return jwt.verify(__rt, secretkey, (err, res) => {
               if (err) {
+                remove_cookie(response)
                 return { username: "false", cart_value: 0 };
               }
               if (res) {
@@ -296,11 +280,12 @@ server.use(
       },
       //get googleusers
       getgoogleuser: () => {
-        const { __rt, __atidk } = request.cookies || null;
+        const { __rt, __atidk, mb_ } = request.cookies || null;
         try {
-          if (__rt && __atidk) {
+          if (__rt && __atidk && mb_) {
             return jwt.verify(__rt, secretkey, (err, verified_rt) => {
               if (err) {
+                remove_cookie(response)
                 return { username: "false", cart_value: 0 };
               } else if (!verified_rt) {
                 return { username: "false", cart_value: 0 };
@@ -327,6 +312,7 @@ server.use(
                               err.message === "jwt signature is required" ||
                               err.message === "invalid signature"
                             ) {
+                              deletecookies_();
                               return { username: err.message, cart_value: 0 };
                             }
                             return createToken(_id, secretkey, "1h").then(
@@ -353,17 +339,16 @@ server.use(
                       );
                     }
                   } else {
-                    response.clearCookie("mb_");
-                    response.clearCookie("__rt");
-                    response.clearCookie("__atidk");
+                    remove_cookie(response)
                     return { username: "false", cart_value: 0 };
                   }
                 });
               }
             });
-          } else if (!__atidk && __rt) {
+          } else if (!__atidk && __rt && mb_) {
             return jwt.verify(__rt, secretkey, (err, res) => {
               if (err) {
+                remove_cookie(response)
                 return { username: "false", cart_value: 0 };
               }
               if (res) {
@@ -406,10 +391,9 @@ server.use(
       },
       // logout user
       logout_: async () => {
+    
         async function deletecookies() {
-          await response.clearCookie("__rt");
-          await response.clearCookie("__atidk");
-          await response.clearCookie("mb_");
+          remove_cookie(response)
           if (request.cookies.G_AUTHUSER_H)
             await response.clearCookie("G_AUTHUSER_H");
           return "verified";
@@ -437,20 +421,23 @@ server.use(
               if (mb_ === "true") {
                 return delete_rt_from_mb_datatbase(_id_, __rt).then(() => {
                   return deletecookies().then((res) => {
-                    return res+'_mb_auth';
+                    return res + "_mb_auth";
                   });
                 });
               } else if (mb_ === "false")
                 return delete_rt_from_gg_datatbase(_id_, __rt).then(() => {
                   return deletecookies().then((res) => {
-                    return res+'_g_auth';
+                    return res + "_g_auth";
                   });
                 });
-            } else return "null";
+            } else {
+              remove_cookie(response)
+              return "null";
+            }
           });
-        }
-        else {
-          return 'null'
+        } else {
+         remove_cookie(response)
+          return "null";
         }
       },
       // add to cart
@@ -458,55 +445,58 @@ server.use(
         const findgoogleuser = (_id_) => {
           return new Promise(async (resolve, reject) => {
             const googleuser = await Googleuser.findById({ _id: _id_ });
-
             if (googleuser) {
               resolve(googleuser);
             } else {
               reject(null);
             }
-          })
-        }
+          });
+        };
         const findmobileuser = (_id_) => {
           return new Promise(async (resolve, reject) => {
             const mobileuser = await Mobileuser.findById({ _id: _id_ });
-
             if (mobileuser) {
               resolve(mobileuser);
             } else {
               reject(null);
             }
-          })
-        }
+          });
+        };
         try {
-          const { mb_, __rt, __atidk } = request.cookies;
+          const { mb_, __rt } = request.cookies;
           if (mb_ && __rt) {
             return jwt.verify(__rt, secretkey, async (err, payload) => {
-              if (err) console.log(err);
-              else if (payload) {
+              if (err) {
+               remove_cookie(response)
+              } else if (payload) {
                 const { _id_ } = payload;
                 if (mb_ === "true") {
-                  return findmobileuser(_id_).then(async user_payload=>{
+                  return findmobileuser(_id_).then(async (user_payload) => {
                     const { refreshToken } = user_payload;
                     if (refreshToken.includes(__rt)) {
                       user_payload.cart_value = cn__value;
                       await user_payload.save();
-                      return { cn_value: user_payload.cart_value, uV_: "null" };
+                      return { cn_value: user_payload.cart_value, uV_: "ok" };
                     }
-                  })
+                  });
                 } else if (mb_ === "false") {
                   return findgoogleuser(_id_).then(async (user_payload) => {
                     const { refreshToken } = user_payload;
                     if (refreshToken.includes(__rt)) {
                       user_payload.cart_value = cn__value;
                       await user_payload.save();
-                      return { cn_value: user_payload.cart_value, uV_: "null" };
+                      return { cn_value: user_payload.cart_value, uV_: "ok" };
                     }
-                  })
+                  });
                 }
               }
             });
+          } else {
+           remove_cookie(response)
+            return { cn_value: 0, uV_: "null" };
           }
         } catch (err) {
+       remove_cookie(response)
           return { cn_value: 0, uV_: "null" };
         }
       },
@@ -516,6 +506,7 @@ server.use(
         if (mb_ && __rt) {
           return jwt.verify(__rt, secretkey, (err, payload) => {
             if (err) {
+
               return "true";
             } else if (!payload) {
               return "true";
@@ -523,29 +514,20 @@ server.use(
               return "false";
             }
           });
-        } else 
-        {
-          
+        } else {
           return "true";
         }
       },
-      mb__verification:()=>{
-        const {mb_}=request.cookies
-        if(!mb_)
-        {
-         response.clearCookie('__rt')
-         response.clearCookie('__atidk')
-          return 'unverified_mb'
+      mb__verification: () => {
+        const { mb_ } = request.cookies;
+        if (!mb_) {
+       remove_cookie(response)
+          return "unverified_mb";
+        } else if (mb_) {
+        remove_cookie(response)
+          return "unverified_mb";
         }
-        else if(mb_)
-        {
-          console.log(mb_)
-          response.clearCookie('__rt')
-          response.clearCookie('__atidk')
-          response.clearCookie('mb_')
-           return 'unverified_mb'
-        }
-      }
+      },
     },
   }))
 );
@@ -618,7 +600,11 @@ server.use(
 //     },
 //     graphiql:true
 // })))
-
+function remove_cookie(response){
+            response.clearCookie("mb_");
+            response.clearCookie("__rt");
+            response.clearCookie("__atidk");
+}
 server.listen(port, () => {
   console.log("connected to the server at port %d", port);
 });

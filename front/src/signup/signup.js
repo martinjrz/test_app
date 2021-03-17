@@ -1,97 +1,81 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import "./signup.css";
 import { AiOutlineEye } from "react-icons/ai";
 import { AiOutlineEyeInvisible } from "react-icons/ai";
 import { Link } from "react-router-dom";
-import axios from "axios";
-import ReqtoServer from '../_render'
-import Loader from "react-loader-spinner";
-
+import ReqtoServer from "../_render";
+import base from "../baseurl";
+import { gapisetup } from "../gapiserver";
+import { scriptsetup } from "../gapiserver";
 export const Signup = () => {
   const [hidepass, showpass] = useState(false);
   const [hiderepass, showrepass] = useState(false);
   const [hide, show] = useState(true);
   const [hider, showr] = useState(true);
-  const [render_signup_page,setrender_of_signup_page]=useState(null)
+  const [render_signup_page, setrender_of_signup_page] = useState(null);
 
   const [pass, setpass] = useState("");
   const [repass, setrepass] = useState("");
   const [mn, setmn] = useState("");
   const [na, setna] = useState("");
-  const [rec_n, setresc_n] = useState(false);
 
   const password_ref = React.createRef();
   const repassword_ref = React.createRef();
   const nameref = React.createRef();
 
   const postuser = async (data) => {
-    return await axios({
-      url: "http://localhost:5000/graphqlserver",
-      method: "POST",
-      data: data,
-      withCredentials: true,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const data_ = await base.post("/graphqlserver", data);
+    return data_;
   };
 
-  const insertgapiscript = () => {
-    const script = document.createElement("script");
-    script.src = "https://apis.google.com/js/platform.js";
+  const insertgapiscript = async () => {
+    const script = await scriptsetup();
     script.onload = async () => {
-      await initialize();
+      const gapiserver = await gapisetup();
+      gapiserver.load("signin2", () => {
+        gapiserver.signin2.render("my-signin2", {
+          width: 180,
+          height: 32,
+          onsuccess: async () => {
+            const user = gapiserver.auth2.getAuthInstance();
+            const ex_user = user.currentUser.get().getBasicProfile().getName();
+            const ex_email = user.currentUser
+              .get()
+              .getBasicProfile()
+              .getEmail();
+            const googleusermutation = {
+              query: `
+                  mutation{
+                      createGoogleuser(username:"${ex_user}",email:"${ex_email}"){
+                          username
+                      }
+                  }
+                  `,
+            };
+            postuser(googleusermutation).then((res) => {
+              if (res.status === 200 || res.status === 201) {
+                const { username } = res.data.data.createGoogleuser;
+
+                if (username === "gmail is already in use") {
+                  user.signOut();
+                } else {
+                }
+              }
+            });
+          },
+        });
+      });
     };
     document.body.appendChild(script);
   };
-  const initialize = () => {
-    new Promise((resolve, reject) => {
-      window.gapi.load("auth2", () => {
-        window.gapi.auth2
-          .init({
-            client_id:
-              "262576652815-te31jdsgf459fu8j931mtphgv3t2ng85.apps.googleusercontent.com",
-            cookiepolicy: "single_host_origin",
-          })
-          .then((response) => {
-            //console.log(response)
-          });
-      });
-    });
-    window.gapi.load("signin2", () => {
-      window.gapi.signin2.render("my-signin2", {
-        width: 180,
-        height: 32,
-        onsuccess: async () => {
-          const user = window.gapi.auth2.getAuthInstance();
-          const ex_user = user.currentUser.get().getBasicProfile().getName();
-          const ex_email = user.currentUser.get().getBasicProfile().getEmail();
-          //console.log(ex_user)
-          const googleusermutation = {
-            query: `
-                mutation{
-                    createGoogleuser(username:"${ex_user}",email:"${ex_email}"){
-                        username
-                    }
-                }
-                `,
-          };
-          postuser(googleusermutation).then((res) => {
-            console.log(res);
-          });
-        },
-      });
-    });
-  };
-
   // useeffect method
   useEffect(() => {
-    const _req_by_signup=new ReqtoServer()
-    _req_by_signup.render_payload().then(res=>{
+    const _req_by_signup = new ReqtoServer();
+    _req_by_signup.render_payload().then((res) => {
       if (res.status === 200 || res.status === 201) {
         const { rendersigninOrnot } = res.data.data;
         if (rendersigninOrnot === "true") {
-         setrender_of_signup_page(true);
+          setrender_of_signup_page(true);
           console.log(rendersigninOrnot);
         } else if (rendersigninOrnot === "false") {
           console.log(rendersigninOrnot);
@@ -99,7 +83,7 @@ export const Signup = () => {
           window.location.replace("/home");
         } else setrender_of_signup_page(true);
       }
-    })
+    });
     document.body.style.background = "white";
     insertgapiscript();
   });
@@ -255,11 +239,9 @@ export const Signup = () => {
           </div>
         </form>
       </div>
-    )
-  else   return (
-    <div></div>
-    // <div className="loader">
-    //   <Loader type="Bars" width={80} height={40} />
-    // </div>
-  )
+    );
+  else
+    return (
+      <div></div>
+    );
 };
