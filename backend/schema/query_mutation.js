@@ -25,6 +25,8 @@ signedInGoogleusers(email:String!):Googleuser!
 getmobileuser:_user1!
 getgoogleuser:_user1!
 logout_:String!
+rendersigninOrnot:String!
+mb__verification:String!
 }
 type Cn_{
     cn_value:Int!
