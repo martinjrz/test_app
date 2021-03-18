@@ -609,7 +609,7 @@ if(process.env.NODE_ENV==='production')
 {
   server.use(express.static('../front/build'))
   server.get('*',(req,res)=>{
-    res.sendFile(path.join('../','front','build','index.html'))
+    res.sendFile(path.join(__dirname,'front','build','index.html'))
   })
 }
 server.listen(port, () => {
