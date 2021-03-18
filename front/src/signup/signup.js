@@ -13,6 +13,7 @@ export const Signup = () => {
   const [hide, show] = useState(true);
   const [hider, showr] = useState(true);
   const [render_signup_page, setrender_of_signup_page] = useState(null);
+  const [renderdiv1, setrenderdiv1] = useState(false);
 
   const [pass, setpass] = useState("");
   const [repass, setrepass] = useState("");
@@ -76,17 +77,20 @@ export const Signup = () => {
         const { rendersigninOrnot } = res.data.data;
         if (rendersigninOrnot === "true") {
           setrender_of_signup_page(true);
-          console.log(rendersigninOrnot);
         } else if (rendersigninOrnot === "false") {
-          console.log(rendersigninOrnot);
           setrender_of_signup_page(false);
           window.location.replace("/home");
         } else setrender_of_signup_page(true);
       }
     });
+    
+
+    
+
+
     document.body.style.background = "white";
     insertgapiscript();
-  });
+  },[insertgapiscript]);
 
   const hide_or_show = () => {
     if (hidepass) {
@@ -98,8 +102,8 @@ export const Signup = () => {
     }
   };
 
-  const Pass_setter = (e) => {
-    setpass(e.target.value);
+  const Pass_setter =async (e) => {
+   await setpass(e.target.value);
     if (hide) {
       show(true);
     } else {
@@ -107,7 +111,9 @@ export const Signup = () => {
     }
   };
   const repass_setter = (e) => {
+ 
     setrepass(e.target.value);
+  
     if (hider) {
       showr(true);
     } else {
@@ -134,27 +140,35 @@ export const Signup = () => {
   //submit the form
   const submit_form = (e) => {
     e.preventDefault();
-    if (pass && repass && pass === repass && mn && na) {
-      console.log("done");
-      const register_user = {
-        query: `
-            mutation{
-                createMobileuser(username:"${na}",password:"${pass}",mobile_no:"${mn}"){
-                    username
-                }
-            }
-            `,
-      };
-      postuser(register_user).then((response) => {
-        if (response.status !== 200 && response.status !== 201) {
-          throw new Error("server error");
-        } else {
-          // console.log(response)
-        }
-      });
-    }
+    // if (pass && repass && pass === repass && mn && na) {
+    //   console.log("done");
+    //   const register_user = {
+    //     query: `
+    //         mutation{
+    //             createMobileuser(username:"${na}",password:"${pass}",mobile_no:"${mn}"){
+    //                 username
+    //             }
+    //         }
+    //         `,
+    //   };
+    //   postuser(register_user).then((response) => {
+    //     if (response.status !== 200 && response.status !== 201) {
+    //       throw new Error("server error");
+    //     } else {
+    //       // console.log(response)
+    //     }
+    //   });
+    // }
+    setrenderdiv1(true);
   };
-  if (render_signup_page)
+  const goback=(e)=>{
+    e.preventDefault()
+    setrenderdiv1(false)
+  }
+  const submit_form_=(e)=>{
+
+  }
+  if (render_signup_page && !renderdiv1)
     return (
       <div className="div-1-l">
         <form className="div-form-l-1" onSubmit={(e) => submit_form(e)}>
@@ -176,10 +190,11 @@ export const Signup = () => {
             />
             <span></span>
           </div>
-          <div value={pass} className="in-div-2">
+          <div  className="in-div-2">
             <input
               onChange={(e) => Pass_setter(e)}
               autoComplete="off"
+              value={pass}
               autoCorrect="off"
               ref={password_ref}
               className="in-2"
@@ -198,10 +213,11 @@ export const Signup = () => {
               )}
             </span>
           </div>
-          <div value={repass} className="in-div-4">
+          <div className="in-div-4">
             <input
               onChange={(e) => repass_setter(e)}
               autoComplete="off"
+              value={repass} 
               autoCorrect="off"
               ref={repassword_ref}
               className="in-3"
@@ -240,8 +256,28 @@ export const Signup = () => {
         </form>
       </div>
     );
-  else
+  else if (renderdiv1) {
     return (
-      <div></div>
+      <div className="div-1-l">
+        <form className="div-form-l-1">
+          <div>
+            <h1 className="hh-11">Enter the code</h1>
+          </div>
+          <input className="co-l-1" placeholder="code"></input>
+          <div className="co-div-l-1">
+            <button 
+            onClick={(e)=>goback(e)}
+            className="bt-11">back</button>
+            <button 
+            onClick={(e)=>submit_form_(e)}
+            className="bt-22">submit</button>
+          </div>
+          <div className='co-div-l-2'>
+            <p className='rc-l-11'>Don't receive code?</p>
+            <button className='re-l-1-1'>Send again</button>
+          </div>
+        </form>
+      </div>
     );
+  } else return <div></div>;
 };
