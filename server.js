@@ -17,13 +17,13 @@ const port = process.env.PORT || 5000;
 server.use(bodyparser.json());
 server.use(bodyparser.urlencoded({ extended: true }));
 
-server.use(
-  cors({
-    credentials: true,
-    origin: "https://marsi-chammal-app.herokuapp.com/",
-    methods: ["post", "put", "get", "delete"],
-  })
-);
+// server.use(
+//   cors({
+//     credentials: true,
+//     origin: "https://marsi-chammal-app.herokuapp.com/",
+//     methods: ["post", "put", "get", "delete"],
+//   })
+// );
 
 const secretkey = `asdfadsfdfk@&*%&^%^
 *@&*&dhfhadsjfh
@@ -45,7 +45,7 @@ server.use(
   "/graphqlserver",
   graphqlHTTP((request, response) => ({
     schema: Schema,
-    graphiql: true,
+    graphiql:true,
     rootValue: {
       //create mobile user
       createMobileuser: ({ username, password, mobile_no }) => {
