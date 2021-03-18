@@ -607,7 +607,7 @@ function remove_cookie(response){
 }
 if(process.env.NODE_ENV==='production')
 {
-  server.use(express.static('../front/build'))
+  server.use(express.static('front/build'))
   server.get('*',(req,res)=>{
     res.sendFile(path.join(__dirname,'front','build','index.html'))
   })
