@@ -20,7 +20,7 @@ server.use(bodyparser.urlencoded({ extended: true }));
 server.use(
   cors({
     credentials: true,
-    origin: "http://localhost:3000",
+    origin: "https://marsi-chammal-app.herokuapp.com/",
     methods: ["post", "put", "get", "delete"],
   })
 );
