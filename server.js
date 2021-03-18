@@ -42,7 +42,7 @@ const { Googleuser } = require("./backend/UserModel/google_user_schema");
 const Schema = require("./backend/schema/query_mutation");
 
 server.use(
-  "https://marsi-chammal-red-rice-app.herokuapp.com/graphqlserver",
+  "/graphqlserver",
   graphqlHTTP((request, response) => ({
     schema: Schema,
     graphiql:true,
