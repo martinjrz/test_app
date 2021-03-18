@@ -4,7 +4,7 @@ export const gapisetup = () => {
       window.gapi.auth2
         .init({
           client_id:
-            "262576652815-te31jdsgf459fu8j931mtphgv3t2ng85.apps.googleusercontent.com",
+            "1090207276654-b6qp5cl7plo37heaj8qkutqrn0lj92ce.apps.googleusercontent.com",
           cookiepolicy: "single_host_origin",
         })
         .then((res) => {
