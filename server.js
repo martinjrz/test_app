@@ -312,7 +312,7 @@ server.use(
                               err.message === "jwt signature is required" ||
                               err.message === "invalid signature"
                             ) {
-                              deletecookies_();
+                             remove_cookie(response)
                               return { username: err.message, cart_value: 0 };
                             }
                             return createToken(_id, secretkey, "1h").then(
