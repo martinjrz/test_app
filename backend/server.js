@@ -5,7 +5,7 @@ const cookie_parser = require("cookie-parser");
 const cors = require("cors");
 const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-
+const path=require('path')
 const { graphqlHTTP } = require("express-graphql");
 // const {buildSchema}=require('graphql')
 
@@ -604,6 +604,13 @@ function remove_cookie(response){
             response.clearCookie("mb_");
             response.clearCookie("__rt");
             response.clearCookie("__atidk");
+}
+if(process.env.NODE_ENV==='production')
+{
+  server.use(express.static('../front/build'))
+  server.get('*',(req,res)=>{
+    res.sendFile(path.resolve(__dirname,'front','build','index.html'))
+  })
 }
 server.listen(port, () => {
   console.log("connected to the server at port %d", port);
