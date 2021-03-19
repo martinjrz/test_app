@@ -39,16 +39,14 @@ export default function Index() {
           <Route
             exact
             path="/signin"
-          
             component={
                 Signin
             }
-     
           />
           <Route
             exact
             path="/signup"
-            component={ Signup}
+            render={()=><Signup/>}
           />
           <Route
             exact

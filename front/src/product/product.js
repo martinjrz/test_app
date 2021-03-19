@@ -154,10 +154,6 @@ export default class Product extends Component {
             });
           };
           document.body.appendChild(script);
-          
-         
-        // else {
-        // }
       }
     } else if (mb__ === "true" || mb__ === "false") {
       if (this.state.ggormb === "true") this.reqtombleserver(_qe_user1);
