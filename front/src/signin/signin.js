@@ -11,16 +11,16 @@ import { scriptsetup } from "../gapiserver";
 const cookie = new Cookie();
 
 export const Signin = () => {
-  const _name = new WeakMap();
-  function fun(params) {
-    _name.set(this, "kyle");
-    this.name = "naren";
-    this.age = 12;
-    this.fun2 = function () {
-      return "naren";
-    };
-    //  console.log(_name.get(this))
-  }
+  // const _name = new WeakMap();
+  // function fun(params) {
+  //   _name.set(this, "kyle");
+  //   this.name = "naren";
+  //   this.age = 12;
+  //   this.fun2 = function () {
+  //     return "naren";
+  //   };
+  //   //  console.log(_name.get(this))
+  // }
   //   const fun1 = new fun();
   //   const names = _name.get(fun1);
   //   console.log(fun1.fun2());
@@ -46,7 +46,6 @@ export const Signin = () => {
               .get()
               .getBasicProfile()
               .getEmail();
-            // console.log(ex_user)
             const _em = {
               query: `
                           query{
@@ -58,8 +57,9 @@ export const Signin = () => {
             };
             signedinuser(_em)
               .then((res) => {
-                if (res.status !== 201 && res.status !== 200)
-                  console.log("invalid user");
+                if (res.status !== 201 && res.status !== 200){
+
+                }
                 else {
                   return res.data;
                 }
@@ -95,19 +95,23 @@ export const Signin = () => {
   useEffect(async () => {
     document.body.style.background = "white";
     const _req = new ReqtoServer();
-    await _req.render_payload().then((res) => {
-      if (res.status === 200 || res.status === 201) {
-        const { rendersigninOrnot } = res.data.data;
-        if (rendersigninOrnot === "true") {
-          setrender(true);
-        } else if (rendersigninOrnot === "false") {
-          console.log(rendersigninOrnot);
-          window.location.replace("/home");
-        } else setrender(true);
-      }
-    });
+    const mb=await cookie.get('mb_')
+    if(mb==='false' || mb==='true')
+    {
+      window.location.replace('/home')
+    }else 
+      await _req.render_payload().then((res) => {
+        if (res.status === 200 || res.status === 201) {
+          const { rendersigninOrnot } = res.data.data;
+          if (rendersigninOrnot === "true") {
+            setrender(true);
+          } else if (rendersigninOrnot === "false") {
+            window.location.replace("/home");
+          } else setrender(true);
+        }
+      });
     insertgapiscript();
-  },[]);
+  },[insertgapiscript]);
 
   // object funtion
 

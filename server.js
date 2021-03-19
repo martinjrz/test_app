@@ -17,13 +17,13 @@ const port = process.env.PORT || 5000;
 server.use(bodyparser.json());
 server.use(bodyparser.urlencoded({ extended: true }));
 
-// server.use(
-//   cors({
-//     credentials: true,
-//     origin: "https://marsi-chammal-app.herokuapp.com/",
-//     methods: ["post", "put", "get", "delete"],
-//   })
-// );
+server.use(
+  cors({
+    credentials: true,
+    origin: "http://localhost:3000",
+    methods: ["post", "put", "get", "delete"],
+  })
+);
 
 const secretkey = `asdfadsfdfk@&*%&^%^
 *@&*&dhfhadsjfh
@@ -506,15 +506,18 @@ server.use(
         if (mb_ && __rt) {
           return jwt.verify(__rt, secretkey, (err, payload) => {
             if (err) {
-
+              remove_cookie(response)
               return "true";
             } else if (!payload) {
+              remove_cookie(response)
               return "true";
             } else {
+              remove_cookie(response)
               return "false";
             }
           });
         } else {
+          remove_cookie(response)
           return "true";
         }
       },

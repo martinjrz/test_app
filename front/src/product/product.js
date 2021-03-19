@@ -361,7 +361,7 @@ Want to be a retailer? Then fill the form
     else if (!this.state.render_page)
       return (
         <div className="loader">
-          <Loader type="Bars" width={80} height={40} />
+          <Loader type="Oval" width={80} height={40} />
         </div>
       );
   }
