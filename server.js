@@ -509,10 +509,8 @@ server.use(
               remove_cookie(response)
               return "true";
             } else if (!payload) {
-              remove_cookie(response)
               return "true";
             } else {
-              remove_cookie(response)
               return "false";
             }
           });
