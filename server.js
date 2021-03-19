@@ -89,6 +89,7 @@ server.use(
                         httpOnly: true,
                         sameSite: "lax",
                         maxAge: 36000000,
+                        secure:true
                       });
                       return Mobileuser.findByIdAndUpdate(_id, {
                         $push: { refreshToken: res },
@@ -98,6 +99,7 @@ server.use(
                             httpOnly: true,
                             sameSite: "lax",
                             maxAge: 360000,
+                            secure:true
                           });
                           return { username };
                         });
@@ -125,6 +127,7 @@ server.use(
                   httpOnly: true,
                   sameSite: "lax",
                   maxAge: 36000000,
+                  secure:true
                 });
                 return Googleuser.findByIdAndUpdate(_id, {
                   $push: { refreshToken: rt },
@@ -134,6 +137,7 @@ server.use(
                       httpOnly: true,
                       sameSite: "lax",
                       maxAge: 3600000,
+                      secure:true
                     });
                     return { username };
                   });
@@ -206,6 +210,7 @@ server.use(
                                 httpOnly: true,
                                 sameSite: "lax",
                                 maxAge: 3600000,
+                                secure:true
                               });
                               return {
                                 username: username,
@@ -257,6 +262,7 @@ server.use(
                             httpOnly: true,
                             sameSite: "lax",
                             maxAge: 3600000,
+                            secure:true
                           });
                           return { username: username, cart_value: cart_value };
                         }
@@ -368,6 +374,7 @@ server.use(
                             httpOnly: true,
                             sameSite: "lax",
                             maxAge: 3600000,
+                            secure:true
                           });
                           return { username: username, cart_value: cart_value };
                         }
