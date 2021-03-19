@@ -2,12 +2,15 @@ import React, { useEffect, useState } from "react";
 import "./signup.css";
 import { AiOutlineEye } from "react-icons/ai";
 import { AiOutlineEyeInvisible } from "react-icons/ai";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import ReqtoServer from "../_render";
 import base from "../baseurl";
 import { gapisetup } from "../gapiserver";
 import { scriptsetup } from "../gapiserver";
 export const Signup = (props) => {
+
+  const history=useHistory()
+
   const [hidepass, showpass] = useState(false);
   const [hiderepass, showrepass] = useState(false);
   const [hide, show] = useState(true);
@@ -20,6 +23,7 @@ export const Signup = (props) => {
   const [mn, setmn] = useState("");
   const [na, setna] = useState("");
 
+  
   const password_ref = React.createRef();
   const repassword_ref = React.createRef();
   const nameref = React.createRef();
@@ -78,7 +82,7 @@ export const Signup = (props) => {
           setrender_of_signup_page(true);
         } else if (rendersigninOrnot === "false") {
           setrender_of_signup_page(false);
-          window.location.replace("/home");
+          history.push('/home')
         } else setrender_of_signup_page(true);
       }
     });

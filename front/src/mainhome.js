@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Route, Switch, useHistory } from "react-router-dom";
 import Product from "./product/product";
 import { Signin } from "./signin/signin";
 import { Signup } from "./signup/signup";
 import base from "./baseurl";
 import Loader from "react-loader-spinner";
 export default function Index() {
+  const history=useHistory()
   const [rendersignin, setrendersignin] = useState(null);
   const reqforrendering = async (rendersignin) => {
     const payload = await base.post("/graphqlserver", rendersignin);
@@ -38,7 +39,7 @@ export default function Index() {
       <Switch>
         <Route exact path="/signin" component={Signin} />
         <Route exact path="/signup" component={Signup} />
-        <Route exact path="/home" component={Product} />
+        <Route exact path="/home" render={()=><Product  history={history}/>} />
       </Switch>
     </BrowserRouter>
   );

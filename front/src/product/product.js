@@ -6,17 +6,19 @@ import { AiOutlinePlus } from "react-icons/ai";
 import { AiOutlineMinus } from "react-icons/ai";
 import "./product.css";
 import img from "./marsi.png";
-import { Link } from "react-router-dom";
+import { Link} from "react-router-dom";
 import Cookie from "universal-cookie";
 import Loader from "react-loader-spinner";
 import base from "../baseurl";
 import { gapisetup } from "../gapiserver";
 import { scriptsetup } from "../gapiserver";
+
 const cookie = new Cookie();
 
 export default class Product extends Component {
-  constructor() {
-    super();
+
+  constructor(props) {
+    super(props);
     this.price = 250;
     this.state = {
       up_cart_no: 0,
@@ -27,7 +29,7 @@ export default class Product extends Component {
       initialmb_state: null,
     };
   }
-
+  
   // request to google user
   reqtoggleserver = (towhom) => {
     base.post("/graphqlserver", towhom).then(async (res) => {
@@ -41,7 +43,7 @@ export default class Product extends Component {
             const gapiserver=await gapisetup()
             const authinstance=gapiserver.auth2.getAuthInstance()
             authinstance.signOut()
-            window.location.replace("/signin")
+           this.props.history.push('/signin')
           }
          document.body.appendChild(script)   
         } else {
@@ -78,7 +80,7 @@ export default class Product extends Component {
               const authinstance = gapiserver.auth2.getAuthInstance();
               if(authinstance.currentUser.get().getBasicProfile())
               authinstance.signOut();
-              window.location.replace("/signin");
+             this.props.history.push('/signin')
              };
             document.body.appendChild(script);
         } else {
@@ -94,6 +96,7 @@ export default class Product extends Component {
 
   // when the page first render
   async componentDidMount() {
+    document.body.style.background='#3e3f3f'
     const mb__ = await cookie.get("mb_");
 
     await this.setState({
@@ -124,7 +127,7 @@ export default class Product extends Component {
       const gapiserver = await gapisetup();
       const authinstance = gapiserver.auth2.getAuthInstance();
       authinstance.signOut();
-      window.location.replace("/signin");
+     this.props.history.push('/signin')
     };
 
     if (!mb__) {
@@ -171,7 +174,7 @@ export default class Product extends Component {
           };
           document.body.appendChild(script);
         } else {
-          window.location.replace("/signin");
+        this.props.history.push('/signin')
         }
       }
     }
@@ -198,7 +201,7 @@ export default class Product extends Component {
           authinstance.signOut();
           window.location.replace("/signin");
         } else if (logout_ === "verified_mb_auth") {
-          window.location.replace("/signin");
+         this.props.history.push('/signin')
         }
         else {
           window.location.reload()

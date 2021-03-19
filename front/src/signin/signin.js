@@ -2,15 +2,17 @@ import React, { useEffect, useState } from "react";
 import "./signin.css";
 import { AiOutlineEye } from "react-icons/ai";
 import { AiOutlineEyeInvisible } from "react-icons/ai";
-import { Link } from "react-router-dom";
+import { Link,useLocation,useHistory} from "react-router-dom";
 import Cookie from "universal-cookie";
 import base from "../baseurl";
 import Loader from "react-loader-spinner";
 import { gapisetup } from "../gapiserver";
 import { scriptsetup } from "../gapiserver";
-const cookie = new Cookie();
 
 export const Signin = () => {
+  const location=useLocation()
+  const history=useHistory()
+  const cookie = new Cookie();
   // const _name = new WeakMap();
   // function fun(params) {
   //   _name.set(this, "kyle");
@@ -58,7 +60,6 @@ export const Signin = () => {
             signedinuser(_em)
               .then((res) => {
                 if (res.status !== 201 && res.status !== 200){
-
                 }
                 else {
                   return res.data;
@@ -76,7 +77,7 @@ export const Signin = () => {
                     path: "/",
                     expires: new Date(expiredate),
                   });
-                  window.location.replace("/home");
+                    history.goBack()
                 }
               });
           },
@@ -104,11 +105,12 @@ export const Signin = () => {
            const gapiserver=await gapisetup()
            const authinstance=gapiserver.auth2.getAuthInstance()
            authinstance.signOut()   
-           setrender(true);
-            }
-            document.body.appendChild(script)
+          }
+          setrender(true);
+        
+            // document.body.appendChild(script)
           } else if (rendersigninOrnot === "false") {
-            window.location.replace("/home");
+             history.goBack()
           } else setrender(true);
         }
       });
@@ -170,7 +172,10 @@ export const Signin = () => {
           if(res.status===201 || res.status===200) {
             const { username } = res.data.data.signedInMobileusers;
             if (username === "mobile_no not found" || username === "wrong password") {
-               window.location.replace("/signin");
+              // window.location.replace("/signin");
+              //  history.push('/signin')
+            //  window.location.reload(false)
+               button.disabled=false
             } else {
               const date = new Date();
               const expiredate = date.setTime(date.getTime() + 36000000);
