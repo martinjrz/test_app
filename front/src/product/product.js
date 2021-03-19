@@ -34,10 +34,10 @@ export default class Product extends Component {
       if (res.status === 200 || res.status === 201) {
         const { username, cart_value } = res.data.data.getgoogleuser;
         if (
-          username === "jwt malformed" ||
-          username === "invalid token" ||
-          username === "jwt signature is required" ||
-          username === "invalid signature" ||
+          // username === "jwt malformed" ||
+          // username === "invalid token" ||
+          // username === "jwt signature is required" ||
+          // username === "invalid signature" ||
           username === "false"
         ) {
           const script=await scriptsetup()
@@ -74,10 +74,10 @@ export default class Product extends Component {
       if (res.status === 200 || res.status === 201) {
         const { username,cart_value} = res.data.data.getmobileuser;
         if (
-          username === "jwt malformed" ||
-          username === "invalid token" ||
-          username === "jwt signature is required" ||
-          username === "invalid signature" ||
+          // username === "jwt malformed" ||
+          // username === "invalid token" ||
+          // username === "jwt signature is required" ||
+          // username === "invalid signature" ||
           username === "false"
         ) {
             const script = await scriptsetup();

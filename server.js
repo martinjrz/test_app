@@ -195,15 +195,15 @@ server.use(
                     if (refreshToken.includes(__rt)) {
                       return jwt.verify(__atidk, secretkey, (err, result_1) => {
                         if (err) {
-                          if (
-                            err.message === "invalid token" ||
-                            err.message === "jwt malformed" ||
-                            err.message === "jwt signature is required" ||
-                            err.message === "invalid signature"
-                          ) {
-                            remove_cookie(response)
-                            return { username: err.message, cart_value: 0 };
-                          }
+                          // if (
+                          //   err.message === "invalid token" ||
+                          //   err.message === "jwt malformed" ||
+                          //   err.message === "jwt signature is required" ||
+                          //   err.message === "invalid signature"
+                          // ) {
+                          //   remove_cookie(response)
+                          //   return { username: err.message, cart_value: 0 };
+                          // }
                           return createToken(_id_, secretkey, "1h").then(
                             (res) => {
                               response.cookie("__atidk", res, {
@@ -298,7 +298,6 @@ server.use(
               } else {
                 const { _id_ } = verified_rt;
                 return Googleuser.findById({ _id: _id_ }).then((_rt_user) => {
-                  const { mb_ } = request.cookies;
                   if (_rt_user) {
                     const {
                       username,
@@ -312,15 +311,15 @@ server.use(
                         secretkey,
                         (err, verified_at) => {
                           if (err) {
-                            if (
-                              err.message === "invalid token" ||
-                              err.message === "jwt malformed" ||
-                              err.message === "jwt signature is required" ||
-                              err.message === "invalid signature"
-                            ) {
-                             remove_cookie(response)
-                              return { username: err.message, cart_value: 0 };
-                            }
+                            // if (
+                            //   err.message === "invalid token" ||
+                            //   err.message === "jwt malformed" ||
+                            //   err.message === "jwt signature is required" ||
+                            //   err.message === "invalid signature"
+                            // ) {
+                            //  remove_cookie(response)
+                            //   return { username: err.message, cart_value: 0 };
+                            // }
                             return createToken(_id, secretkey, "1h").then(
                               (newtoken) => {
                                 console.log(username);

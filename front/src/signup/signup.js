@@ -56,7 +56,6 @@ export const Signup = () => {
             postuser(googleusermutation).then((res) => {
               if (res.status === 200 || res.status === 201) {
                 const { username } = res.data.data.createGoogleuser;
-
                 if (username === "gmail is already in use") {
                   user.signOut();
                 } else {
@@ -83,11 +82,6 @@ export const Signup = () => {
         } else setrender_of_signup_page(true);
       }
     });
-    
-
-    
-
-
     document.body.style.background = "white";
     insertgapiscript();
   },[insertgapiscript]);
@@ -166,7 +160,7 @@ export const Signup = () => {
     setrenderdiv1(false)
   }
   const submit_form_=(e)=>{
-
+     e.preventDefault()
   }
   if (render_signup_page && !renderdiv1)
     return (
