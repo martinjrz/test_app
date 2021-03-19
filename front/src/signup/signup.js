@@ -7,7 +7,7 @@ import ReqtoServer from "../_render";
 import base from "../baseurl";
 import { gapisetup } from "../gapiserver";
 import { scriptsetup } from "../gapiserver";
-export const Signup = () => {
+export const Signup = (props) => {
   const [hidepass, showpass] = useState(false);
   const [hiderepass, showrepass] = useState(false);
   const [hide, show] = useState(true);
@@ -162,7 +162,7 @@ export const Signup = () => {
   const submit_form_=(e)=>{
      e.preventDefault()
   }
-  if (render_signup_page && !renderdiv1)
+  if (render_signup_page && !renderdiv1 && props.rendersignup)
     return (
       <div className="div-1-l">
         <form className="div-form-l-1" onSubmit={(e) => submit_form(e)}>

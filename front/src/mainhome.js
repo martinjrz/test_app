@@ -19,18 +19,18 @@ export default function Index() {
         }
         `,
     };
-    // reqforrendering(rendersignin).then((render_payload) => {
-    //   if (render_payload) {
-    //     const { rendersigninOrnot } = render_payload.data.data;
-    //     console.log(rendersigninOrnot);
-    //     if (rendersigninOrnot === "true") {
-    //         setrendersignin(true);
-    //     } else if (rendersigninOrnot === "false") {
-    //       console.log("i am running man");
-    //       setrendersignin(false);
-    //     }
-    //   }
-    // });
+    reqforrendering(rendersignin).then((render_payload) => {
+      if (render_payload) {
+        const { rendersigninOrnot } = render_payload.data.data;
+        console.log(rendersigninOrnot);
+        if (rendersigninOrnot === "true") {
+            setrendersignin(true);
+        } else if (rendersigninOrnot === "false") {
+          console.log("i am running man");
+          setrendersignin(false);
+        }
+      }
+    });
   });
   // if (rendersignin != null)
     return (
@@ -46,7 +46,7 @@ export default function Index() {
           <Route
             exact
             path="/signup"
-            render={()=><Signup/>}
+            component={()=><Signup rendersignup={rendersignin}/>}
           />
           <Route
             exact
