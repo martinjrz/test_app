@@ -99,7 +99,14 @@ export const Signin = () => {
         if (res.status === 200 || res.status === 201) {
           const { rendersigninOrnot } = res.data.data;
           if (rendersigninOrnot === "true") {
-            setrender(true);
+            const script=await scriptsetup()
+            script.onload=async ()=>{
+           const gapiserver=await gapisetup()
+           const authinstance=gapiserver.auth2.getAuthInstance()
+           authinstance.signOut()   
+           setrender(true);
+            }
+            document.body.appendChild(script)
           } else if (rendersigninOrnot === "false") {
             window.location.replace("/home");
           } else setrender(true);

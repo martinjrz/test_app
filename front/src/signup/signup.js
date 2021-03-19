@@ -162,7 +162,8 @@ export const Signup = (props) => {
   const submit_form_=(e)=>{
      e.preventDefault()
   }
-  if (render_signup_page && !renderdiv1 && props.rendersignup)
+  if (render_signup_page && !renderdiv1)
+
     return (
       <div className="div-1-l">
         <form className="div-form-l-1" onSubmit={(e) => submit_form(e)}>

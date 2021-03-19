@@ -3,59 +3,45 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Product from "./product/product";
 import { Signin } from "./signin/signin";
 import { Signup } from "./signup/signup";
-import base from './baseurl'
+import base from "./baseurl";
 import Loader from "react-loader-spinner";
 export default function Index() {
   const [rendersignin, setrendersignin] = useState(null);
   const reqforrendering = async (rendersignin) => {
-    const payload = await base.post('/graphqlserver',rendersignin)
+    const payload = await base.post("/graphqlserver", rendersignin);
     return payload;
   };
   useEffect(() => {
-    const rendersignin = {
-      query: `
-        query{
-            rendersigninOrnot 
-        }
-        `,
-    };
-    reqforrendering(rendersignin).then((render_payload) => {
-      if (render_payload) {
-        const { rendersigninOrnot } = render_payload.data.data;
-        console.log(rendersigninOrnot);
-        if (rendersigninOrnot === "true") {
-            setrendersignin(true);
-        } else if (rendersigninOrnot === "false") {
-          console.log("i am running man");
-          setrendersignin(false);
-        }
-      }
-    });
+    // const rendersignin = {
+    //   query: `
+    //     query{
+    //         rendersigninOrnot 
+    //     }
+    //     `,
+    // };
+    // reqforrendering(rendersignin).then((render_payload) => {
+    //   if (render_payload) {
+    //     const { rendersigninOrnot } = render_payload.data.data;
+    //     console.log(rendersigninOrnot);
+    //     if (rendersigninOrnot === "true") {
+    //       setrendersignin(true);
+    //     } else if (rendersigninOrnot === "false") {
+    //       console.log("i am running man");
+    //       setrendersignin(false);
+    //     }
+    //   }
+    // });
   });
   // if (rendersignin != null)
-    return (
-      <BrowserRouter>
-        <Switch>
-          <Route
-            exact
-            path="/signin"
-            component={
-                Signin
-            }
-          />
-          <Route
-            exact
-            path="/signup"
-            component={()=><Signup rendersignup={rendersignin}/>}
-          />
-          <Route
-            exact
-            path="/home"
-            component={ Product }
-          />
-        </Switch>
-      </BrowserRouter>
-    )
+  return (
+    <BrowserRouter>
+      <Switch>
+        <Route exact path="/signin" component={Signin} />
+        <Route exact path="/signup" component={Signup} />
+        <Route exact path="/home" component={Product} />
+      </Switch>
+    </BrowserRouter>
+  );
   // else if (rendersignin == null) {
   //   const styles = {
   //     display: "flex",
