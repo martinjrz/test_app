@@ -95,7 +95,7 @@ export const Signin = () => {
   useEffect(async () => {
     document.body.style.background = "white";
     const _req = new ReqtoServer();
-      await _req.render_payload().then((res) => {
+      await _req.render_payload().then(async (res) => {
         if (res.status === 200 || res.status === 201) {
           const { rendersigninOrnot } = res.data.data;
           if (rendersigninOrnot === "true") {
