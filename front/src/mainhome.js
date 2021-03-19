@@ -15,7 +15,7 @@ export default function Index() {
     const rendersignin = {
       query: `
         query{
-            rendersigninOrnot
+            rendersigninOrnot 
         }
         `,
     };

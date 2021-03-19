@@ -273,7 +273,12 @@ export default class Product extends Component {
             </p>
             <p className="em-l-0"></p>
             <div className="l-div-1">
-              <Link className="l-1" to="/home">
+              <Link className="l-1" 
+              onClick={()=>{
+                document.title='Home'
+                window.location.reload()
+              }}
+              to="/home">
                 Home
               </Link>
             </div>
