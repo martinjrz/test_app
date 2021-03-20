@@ -4,7 +4,6 @@ import Product from "./product/product";
 import { Signin } from "./signin/signin";
 import { Signup } from "./signup/signup";
 import base from "./baseurl";
-const History_Context=React.createContext()
 export default function Index() {
   const [rendersignin, setrendersignin] = useState(null);
   const reqforrendering = async (rendersignin) => {
@@ -36,15 +35,12 @@ export default function Index() {
   });
   // if (rendersignin != null)
   return (
-    <History_Context.Provider value={history}>
     <BrowserRouter>
         <Route exact path="/signin" component={Signin} />
-
         <Route exact path="/signup" component={Signup} />
         <Route exact path="/home" render={(routeProps)=><Product  {...routeProps}/>} />
- 
     </BrowserRouter>
-    </History_Context.Provider>
+
 
   );
   // else if (rendersignin == null) {
@@ -57,4 +53,3 @@ export default function Index() {
   //   return <Loader style={styles} type="Oval" width={80} height={40}></Loader>;
   // }
 }
-export {History_Context}
