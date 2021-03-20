@@ -11,7 +11,7 @@
     "dev": "nodemon server.js",
     "i": "cd front && npm start",
     "devserver": "concurrently \"nodemon index.js\"  \"npm run i\" ",
-    "heroku-postbuild": "cd front && npm install  && npm run build"
+    "heroku-postbuild": "cd front && npm install && npm run build"
   },
   "author": "martin",
   "license": "ISC",
@@ -27,6 +27,5 @@
     "graphql": "^15.5.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.11.19"
-  },
-  "devDependencies": {}
+  }
 }
