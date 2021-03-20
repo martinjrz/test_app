@@ -82,7 +82,7 @@ export const Signup = (props) => {
           setrender_of_signup_page(true);
         } else if (rendersigninOrnot === "false") {
           setrender_of_signup_page(false);
-          history.push('/home')
+         return history.push('/home')
         } else setrender_of_signup_page(true);
       }
     });

@@ -107,7 +107,7 @@ export const Signin = () => {
            authinstance.signOut()   
           }
            setrender(true);
-           
+
             document.body.appendChild(script)
           } else if (rendersigninOrnot === "false") {
              history.push('/home')
@@ -181,7 +181,7 @@ export const Signin = () => {
                 expires: new Date(expiredate),
               });
               // window.location.replace("/home");
-              history.push('/home')
+            return   history.push('/home')
             }
           }
         })

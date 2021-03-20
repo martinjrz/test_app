@@ -418,6 +418,10 @@ server.use(
                     return res + "_g_auth";
                   });
                 });
+                else {
+                  remove_cookie(response)
+                  return 'null'
+                }
             } else {
               remove_cookie(response)
               return "null";

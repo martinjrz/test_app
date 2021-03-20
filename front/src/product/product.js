@@ -127,7 +127,8 @@ export default class Product extends Component {
       const gapiserver = await gapisetup();
       const authinstance = gapiserver.auth2.getAuthInstance();
       authinstance.signOut();
-      window.location.replace("/signin");
+      // window.location.replace("/signin");
+      return history.push('/signin')
     };
 
     if (!mb__) {
@@ -199,9 +200,11 @@ export default class Product extends Component {
           const gapiserver = await gapisetup();
           const authinstance = gapiserver.auth2.getAuthInstance();
           authinstance.signOut();
-          window.location.replace("/signin");
+          // window.location.replace("/signin");
+          return history.push('/signin')
         } else if (logout_ === "verified_mb_auth") {
-          window.location.replace("/signin");
+          // window.location.replace("/signin");
+          return history.push('/signin')
         }
         else {
           window.location.reload()
