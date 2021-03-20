@@ -129,7 +129,7 @@ export default class Product extends Component {
       const gapiserver = await gapisetup();
       const authinstance = gapiserver.auth2.getAuthInstance();
       authinstance.signOut();
-      return this.props.history.push('/signin')
+       this.props.history.push('/signin')
       
     };
 
@@ -151,6 +151,7 @@ export default class Product extends Component {
               signOut_Guser();
             });
           };
+          this.props.history.push('/signin')
           document.body.appendChild(script);
       }
     } else if (mb__ === "true" || mb__ === "false") {
