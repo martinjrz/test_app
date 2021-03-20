@@ -38,7 +38,7 @@ export default function Index() {
     <BrowserRouter>
         <Route exact path="/signin" component={Signin} />
         <Route exact path="/signup" component={Signup} />
-        <Route exact path="/home" render={(routeProps)=><Product  {...routeProps}/>} />
+        <Route exact path="/home" render={(props)=><Product  {...props}/>} />
     </BrowserRouter>
 
 

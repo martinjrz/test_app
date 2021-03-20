@@ -125,7 +125,7 @@ export default class Product extends Component {
     };
 
     const signOut_Guser = async function () {
-      
+      console.log(this.props)
       const gapiserver = await gapisetup();
       const authinstance = gapiserver.auth2.getAuthInstance();
       authinstance.signOut();
