@@ -106,11 +106,10 @@ export const Signin = () => {
            const authinstance=gapiserver.auth2.getAuthInstance()
            authinstance.signOut()   
           }
-          setrender(true);
-        
-            // document.body.appendChild(script)
+           setrender(true);
+            document.body.appendChild(script)
           } else if (rendersigninOrnot === "false") {
-             history.goBack()
+             history.push('/home')
           } else setrender(true);
         }
       });
@@ -172,9 +171,6 @@ export const Signin = () => {
           if(res.status===201 || res.status===200) {
             const { username } = res.data.data.signedInMobileusers;
             if (username === "mobile_no not found" || username === "wrong password") {
-              // window.location.replace("/signin");
-              //  history.push('/signin')
-            //  window.location.reload(false)
                button.disabled=false
             } else {
               const date = new Date();
@@ -183,7 +179,8 @@ export const Signin = () => {
                 path: "/",
                 expires: new Date(expiredate),
               });
-              window.location.replace("/home");
+              // window.location.replace("/home");
+              history.push('/home')
             }
           }
         })
