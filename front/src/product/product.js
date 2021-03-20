@@ -204,6 +204,7 @@ export default class Product extends Component {
           const gapiserver = await gapisetup();
           const authinstance = gapiserver.auth2.getAuthInstance();
           authinstance.signOut();
+          
         } else if (logout_ === "verified_mb_auth") {
           this.redirecttosignedout();
         } else {
