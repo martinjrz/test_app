@@ -11,7 +11,7 @@
     "dev": "nodemon server.js",
     "i": "cd front && npm start",
     "devserver": "concurrently \"nodemon index.js\"  \"npm run i\" ",
-    "heroku-postbuild": "cd front && npm install && npm run build"
+    "heroku-postbuild": "cd front && npm install --only=dev && npm run build"
   },
   "author": "martin",
   "license": "ISC",
