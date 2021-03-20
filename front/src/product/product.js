@@ -6,7 +6,7 @@ import { AiOutlinePlus } from "react-icons/ai";
 import { AiOutlineMinus } from "react-icons/ai";
 import "./product.css";
 import img from "./marsi.png";
-import { Link,NavLink, Redirect} from "react-router-dom";
+import { Link, NavLink, Redirect } from "react-router-dom";
 import Cookie from "universal-cookie";
 import Loader from "react-loader-spinner";
 import base from "../baseurl";
@@ -16,10 +16,9 @@ import { scriptsetup } from "../gapiserver";
 const cookie = new Cookie();
 
 export default class Product extends Component {
-
   constructor(props) {
     super(props);
-    console.log(this.props)
+    console.log(this.props);
     this.price = 250;
     this.state = {
       up_cart_no: 0,
@@ -30,23 +29,25 @@ export default class Product extends Component {
       initialmb_state: null,
     };
   }
-  
+  // redirect to signin router
+  redirecttosignedout = () => {
+    return this.props.history.push("/signin");
+  };
   // request to google user
   reqtoggleserver = (towhom) => {
     base.post("/graphqlserver", towhom).then(async (res) => {
       if (res.status === 200 || res.status === 201) {
         const { username, cart_value } = res.data.data.getgoogleuser;
-        if (
-          username === "false"
-        ) {
-          const script=await scriptsetup()
-          script.onload=async()=>{
-            const gapiserver=await gapisetup()
-            const authinstance=gapiserver.auth2.getAuthInstance()
-            authinstance.signOut()
-            this.props.history.push('/signin')
-          }
-         document.body.appendChild(script)   
+        if (username === "false") {
+          const script = await scriptsetup();
+          script.onload = async () => {
+            const gapiserver = await gapisetup();
+            const authinstance = gapiserver.auth2.getAuthInstance();
+            authinstance.signOut();
+            // this.props.history.push("/signin");
+            this.redirecttosignedout()
+          };
+          document.body.appendChild(script);
         } else {
           await this.setState({
             render_page: true,
@@ -71,19 +72,18 @@ export default class Product extends Component {
   reqtombleserver = (towhom) => {
     base.post("/graphqlserver", towhom).then(async (res) => {
       if (res.status === 200 || res.status === 201) {
-        const { username,cart_value} = res.data.data.getmobileuser;
-        if (
-          username === "false"
-        ) {
-            const script = await scriptsetup();
-            script.onload = async () => {
-              const gapiserver = await gapisetup();
-              const authinstance = gapiserver.auth2.getAuthInstance();
-              if(authinstance.currentUser.get().getBasicProfile())
+        const { username, cart_value } = res.data.data.getmobileuser;
+        if (username === "false") {
+          const script = await scriptsetup();
+          script.onload = async () => {
+            const gapiserver = await gapisetup();
+            const authinstance = gapiserver.auth2.getAuthInstance();
+            if (authinstance.currentUser.get().getBasicProfile())
               authinstance.signOut();
-             this.props.history.push('/signin')
-             };
-            document.body.appendChild(script);
+            // this.props.history.push("/signin");
+            this.redirecttosignedout()
+          };
+          document.body.appendChild(script);
         } else {
           this.setState({
             render_page: true,
@@ -97,12 +97,22 @@ export default class Product extends Component {
 
   // when the page first render
   async componentDidMount() {
-    document.body.style.background='#3e3f3f'
     const mb__ = await cookie.get("mb_");
-
+    document.body.style.background = "#3e3f3f";
     await this.setState({
       ggormb: mb__,
     });
+
+    // signed out googleuserfunction
+    const signOut_Guser = async () => {
+      console.log(this.props);
+      const gapiserver = await gapisetup();
+      const authinstance = gapiserver.auth2.getAuthInstance();
+      authinstance.signOut();
+      // this.props.history.push("/signin");
+      this.redirecttosignedout()
+    };
+    document.body.style.background = "#3e3f3f";
     const _qe_user1 = {
       query: `
             query{
@@ -124,15 +134,6 @@ export default class Product extends Component {
             `,
     };
 
-    const signOut_Guser = async function () {
-      console.log(this.props)
-      const gapiserver = await gapisetup();
-      const authinstance = gapiserver.auth2.getAuthInstance();
-      authinstance.signOut();
-      
-      
-    };
-
     if (!mb__) {
       const verified_query = {
         query: `
@@ -143,17 +144,15 @@ export default class Product extends Component {
       };
       const payload_mb = await base.post("/graphqlserver", verified_query);
       const mb_verification = payload_mb.data.data.mb__verification;
-      console.log(payload_mb.data.data.mb__verification);
       if (mb_verification === "unverified_mb") {
-          const script = await scriptsetup();
-          script.onload = async () => {
-            window.gapi.load("auth2", async () => {
-              signOut_Guser();
-              this.props.history.push('/signin')
-            });
-          };
-          this.props.history.push('/signin')
-          document.body.appendChild(script);
+        const script = await scriptsetup();
+        script.onload = async () => {
+          window.gapi.load("auth2", async () => {
+            signOut_Guser();
+          });
+        };
+        this.props.history.push("/signin");
+        document.body.appendChild(script);
       }
     } else if (mb__ === "true" || mb__ === "false") {
       if (this.state.ggormb === "true") this.reqtombleserver(_qe_user1);
@@ -175,12 +174,12 @@ export default class Product extends Component {
           script.onload = async () => {
             window.gapi.load("auth2", async () => {
               signOut_Guser();
-              this.props.history.push('/signin')
             });
           };
           document.body.appendChild(script);
         } else {
-          this.props.history.push('/signin')
+          // this.props.history.push("/signin");
+          this.redirecttosignedout()
         }
       }
     }
@@ -205,12 +204,10 @@ export default class Product extends Component {
           const gapiserver = await gapisetup();
           const authinstance = gapiserver.auth2.getAuthInstance();
           authinstance.signOut();
-          this.props.history.push('/signin')  
         } else if (logout_ === "verified_mb_auth") {
-          this.props.history.push('/signin')  
-        }
-        else {
-          window.location.reload()
+          this.redirecttosignedout();
+        } else {
+          window.location.reload();
         }
       }
     });
@@ -249,17 +246,14 @@ export default class Product extends Component {
     if (this.state.cart_no >= 1) {
       this.Requestoserver(typeof_req).then((responseback) => {
         if (responseback.status === 201 || responseback.status === 200) {
-          const { cn_value,uV_} = responseback.data.data.addtocarter;
-          if(uV_==='ok')
-          {
+          const { cn_value, uV_ } = responseback.data.data.addtocarter;
+          if (uV_ === "ok") {
             this.setState({
               actual_cart_value: cn_value,
             });
+          } else if (uV_ === "null") {
+            window.location.reload();
           }
-         else if(uV_==='null')
-         {
-           window.location.reload()
-         }
         }
       });
     }
@@ -274,12 +268,14 @@ export default class Product extends Component {
             </p>
             <p className="em-l-0"></p>
             <div className="l-div-1">
-              <NavLink className="l-1" 
-              onClick={()=>{
-                document.title='Home'
-                window.location.reload()
-              }}
-              to="/home">
+              <NavLink
+                className="l-1"
+                onClick={() => {
+                  document.title = "Home";
+                  window.location.reload();
+                }}
+                to="/home"
+              >
                 Home
               </NavLink>
             </div>

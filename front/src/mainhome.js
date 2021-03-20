@@ -36,9 +36,12 @@ export default function Index() {
   // if (rendersignin != null)
   return (
     <BrowserRouter>
-        <Route exact path="/signin" component={Signin} />
+    <Switch>
+    <Route exact path="/signin" component={Signin} />
         <Route exact path="/signup" component={Signup} />
         <Route exact path="/home" render={(props)=><Product  {...props}/>} />
+    </Switch>
+
     </BrowserRouter>
 
 
