@@ -9,17 +9,17 @@ import { gapisetup } from "../gapiserver";
 import { scriptsetup } from "../gapiserver";
 export const Signup = (props) => {
 
-  const history=useHistory()
-const _name=""
-const reducer=(state,action)=>{
-  switch (action.type)
-  {
-    case "set_name":
-      return action.payload.name
-  }
+//   const history=useHistory()
+// const _name=""
+// const reducer=(state,action)=>{
+//   switch (action.type)
+//   {
+//     case "set_name":
+//       return action.payload.name
+//   }
 
-}
-  const [state, dispatch] = useReducer(reducer,_name)
+// // }
+//   const [state, dispatch] = useReducer(reducer,_name)
   const [hidepass, showpass] = useState(false);
   const [hiderepass, showrepass] = useState(false);
   const [hide, show] = useState(true);
@@ -184,10 +184,10 @@ const reducer=(state,action)=>{
           <div className="in-div-1">
             <input
               ref={nameref}
-              // onBlur={(e) => Name_setter(e)}
-              onBlur={(e)=>{
-                return dispatch({type:"set_name",payload:{name:e.target.value}})
-              }}
+              onBlur={(e) => Name_setter(e)}
+              // onBlur={(e)=>{
+              //   return dispatch({type:"set_name",payload:{name:e.target.value}})
+              // }}
               className="in-1"
               placeholder="name"
             />
