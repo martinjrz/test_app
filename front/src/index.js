@@ -3,9 +3,7 @@ import ReactDOM from 'react-dom'
 import Index from './mainhome'
 const App =()=>{
     return (
-  
             <Index/>
-      
     )
 }
 

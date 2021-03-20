@@ -9,7 +9,7 @@ import { gapisetup } from "../gapiserver";
 import { scriptsetup } from "../gapiserver";
 export const Signup = (props) => {
 
-//   const history=useHistory()
+   const history=useHistory()
 // const _name=""
 // const reducer=(state,action)=>{
 //   switch (action.type)
