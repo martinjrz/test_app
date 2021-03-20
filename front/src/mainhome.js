@@ -4,15 +4,16 @@ import Product from "./product/product";
 import { Signin } from "./signin/signin";
 import { Signup } from "./signup/signup";
 import base from "./baseurl";
-import Loader from "react-loader-spinner";
+const History_Context=React.createContext()
 export default function Index() {
-  const history=useHistory()
   const [rendersignin, setrendersignin] = useState(null);
   const reqforrendering = async (rendersignin) => {
     const payload = await base.post("/graphqlserver", rendersignin);
     return payload;
   };
+
   useEffect(() => {
+
     // const rendersignin = {
     //   query: `
     //     query{
@@ -35,14 +36,16 @@ export default function Index() {
   });
   // if (rendersignin != null)
   return (
+    <History_Context.Provider value={history}>
     <BrowserRouter>
-      <Switch>
         <Route exact path="/signin" component={Signin} />
-        
+
         <Route exact path="/signup" component={Signup} />
-        <Route exact path="/home" render={()=><Product  history={history}/>} />
-      </Switch>
+        <Route exact path="/home" render={(routeProps)=><Product  {...routeProps}/>} />
+ 
     </BrowserRouter>
+    </History_Context.Provider>
+
   );
   // else if (rendersignin == null) {
   //   const styles = {
@@ -54,3 +57,4 @@ export default function Index() {
   //   return <Loader style={styles} type="Oval" width={80} height={40}></Loader>;
   // }
 }
+export {History_Context}

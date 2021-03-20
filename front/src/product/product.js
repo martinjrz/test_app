@@ -6,7 +6,7 @@ import { AiOutlinePlus } from "react-icons/ai";
 import { AiOutlineMinus } from "react-icons/ai";
 import "./product.css";
 import img from "./marsi.png";
-import { Link} from "react-router-dom";
+import { Link,NavLink, Redirect} from "react-router-dom";
 import Cookie from "universal-cookie";
 import Loader from "react-loader-spinner";
 import base from "../baseurl";
@@ -18,7 +18,8 @@ const cookie = new Cookie();
 export default class Product extends Component {
 
   constructor(props) {
-    super();
+    super(props);
+    console.log(this.props)
     this.price = 250;
     this.state = {
       up_cart_no: 0,
@@ -43,7 +44,7 @@ export default class Product extends Component {
             const gapiserver=await gapisetup()
             const authinstance=gapiserver.auth2.getAuthInstance()
             authinstance.signOut()
-            window.location.replace("/signin");
+            this.props.history.push('/signin')
           }
          document.body.appendChild(script)   
         } else {
@@ -80,7 +81,7 @@ export default class Product extends Component {
               const authinstance = gapiserver.auth2.getAuthInstance();
               if(authinstance.currentUser.get().getBasicProfile())
               authinstance.signOut();
-              window.location.replace("/signin");
+             this.props.history.push('/signin')
              };
             document.body.appendChild(script);
         } else {
@@ -124,11 +125,12 @@ export default class Product extends Component {
     };
 
     const signOut_Guser = async function () {
+      
       const gapiserver = await gapisetup();
       const authinstance = gapiserver.auth2.getAuthInstance();
       authinstance.signOut();
-      // window.location.replace("/signin");
-      return this.props.history.push('/signin')
+      this.props.history.push('/signin')
+      
     };
 
     if (!mb__) {
@@ -200,11 +202,9 @@ export default class Product extends Component {
           const gapiserver = await gapisetup();
           const authinstance = gapiserver.auth2.getAuthInstance();
           authinstance.signOut();
-          // window.location.replace("/signin");
-           this.props.history.push('/signin')
+          this.props.history.push('/signin')  
         } else if (logout_ === "verified_mb_auth") {
-          // window.location.replace("/signin");
-          this.props.history.push('/signin')
+          this.props.history.push('/signin')  
         }
         else {
           window.location.reload()
@@ -271,14 +271,14 @@ export default class Product extends Component {
             </p>
             <p className="em-l-0"></p>
             <div className="l-div-1">
-              <Link className="l-1" 
+              <NavLink className="l-1" 
               onClick={()=>{
                 document.title='Home'
                 window.location.reload()
               }}
               to="/home">
                 Home
-              </Link>
+              </NavLink>
             </div>
             <button onClick={(e) => this.logout(e)} className="l-o-1">
               Logout

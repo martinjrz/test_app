@@ -2,31 +2,15 @@ import React, { useEffect, useState } from "react";
 import "./signin.css";
 import { AiOutlineEye } from "react-icons/ai";
 import { AiOutlineEyeInvisible } from "react-icons/ai";
-import { Link,useLocation,useHistory} from "react-router-dom";
+import { Link,useHistory} from "react-router-dom";
 import Cookie from "universal-cookie";
 import base from "../baseurl";
-import Loader from "react-loader-spinner";
 import { gapisetup } from "../gapiserver";
 import { scriptsetup } from "../gapiserver";
 
 export const Signin = () => {
-  const location=useLocation()
   const history=useHistory()
   const cookie = new Cookie();
-  // const _name = new WeakMap();
-  // function fun(params) {
-  //   _name.set(this, "kyle");
-  //   this.name = "naren";
-  //   this.age = 12;
-  //   this.fun2 = function () {
-  //     return "naren";
-  //   };
-  //   //  console.log(_name.get(this))
-  // }
-  //   const fun1 = new fun();
-  //   const names = _name.get(fun1);
-  //   console.log(fun1.fun2());
-
   const [hidepassword, showpassword] = useState(false);
   const [hide, show] = useState(true);
   const [render, setrender] = useState(null);
@@ -100,15 +84,15 @@ export const Signin = () => {
         if (res.status === 200 || res.status === 201) {
           const { rendersigninOrnot } = res.data.data;
           if (rendersigninOrnot === "true") {
-            const script=await scriptsetup()
-            script.onload=async ()=>{
-           const gapiserver=await gapisetup()
-           const authinstance=gapiserver.auth2.getAuthInstance()
-           authinstance.signOut()   
-          }
+          //   const script=await scriptsetup()
+          //   script.onload=async ()=>{
+          //  const gapiserver=await gapisetup()
+          //  const authinstance=gapiserver.auth2.getAuthInstance()
+          //  authinstance.signOut()   
+         // }
            setrender(true);
 
-            document.body.appendChild(script)
+          //  document.body.appendChild(script)
           } else if (rendersigninOrnot === "false") {
              history.push('/home')
           } else setrender(true);

@@ -1,11 +1,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import Index from './mainhome'
-import {Provider} from 'react-redux'
-import {createStore} from 'redux'
 const App =()=>{
     return (
-        <Index/>
+        <React.StrictMode>
+            <Index/>
+        </React.StrictMode>
     )
 }
 
