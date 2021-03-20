@@ -181,7 +181,7 @@ export const Signin = () => {
                 expires: new Date(expiredate),
               });
               // window.location.replace("/home");
-            return   history.push('/home')
+             history.push('/home')
             }
           }
         })
