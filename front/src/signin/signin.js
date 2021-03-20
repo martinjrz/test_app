@@ -61,7 +61,7 @@ export const Signin = () => {
                     path: "/",
                     expires: new Date(expiredate),
                   });
-                    history.goBack()
+                    history.push('/home')
                 }
               });
           },
@@ -164,7 +164,6 @@ export const Signin = () => {
                 path: "/",
                 expires: new Date(expiredate),
               });
-              // window.location.replace("/home");
              history.push('/home')
             }
           }
