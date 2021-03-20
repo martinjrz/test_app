@@ -17,7 +17,7 @@ const cookie = new Cookie();
 
 export default class Product extends Component {
 
-  constructor() {
+  constructor(props) {
     super();
     this.price = 250;
     this.state = {
