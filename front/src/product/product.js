@@ -43,7 +43,7 @@ export default class Product extends Component {
             const gapiserver=await gapisetup()
             const authinstance=gapiserver.auth2.getAuthInstance()
             authinstance.signOut()
-           this.props.history.push('/signin')
+            window.location.replace("/signin");
           }
          document.body.appendChild(script)   
         } else {
@@ -80,7 +80,7 @@ export default class Product extends Component {
               const authinstance = gapiserver.auth2.getAuthInstance();
               if(authinstance.currentUser.get().getBasicProfile())
               authinstance.signOut();
-             this.props.history.push('/signin')
+              window.location.replace("/signin");
              };
             document.body.appendChild(script);
         } else {
@@ -127,7 +127,7 @@ export default class Product extends Component {
       const gapiserver = await gapisetup();
       const authinstance = gapiserver.auth2.getAuthInstance();
       authinstance.signOut();
-     this.props.history.push('/signin')
+      window.location.replace("/signin");
     };
 
     if (!mb__) {
@@ -174,7 +174,7 @@ export default class Product extends Component {
           };
           document.body.appendChild(script);
         } else {
-        this.props.history.push('/signin')
+          window.location.replace("/signin");
         }
       }
     }
@@ -201,7 +201,7 @@ export default class Product extends Component {
           authinstance.signOut();
           window.location.replace("/signin");
         } else if (logout_ === "verified_mb_auth") {
-         this.props.history.push('/signin')
+          window.location.replace("/signin");
         }
         else {
           window.location.reload()

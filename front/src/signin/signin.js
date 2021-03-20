@@ -107,6 +107,7 @@ export const Signin = () => {
            authinstance.signOut()   
           }
            setrender(true);
+           
             document.body.appendChild(script)
           } else if (rendersigninOrnot === "false") {
              history.push('/home')
