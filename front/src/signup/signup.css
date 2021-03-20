@@ -9,20 +9,24 @@
   --black_border: 1.2px solid black;
   --ti_color: #0ec253;
 }
-
+htmL{
+  font-size: 100%;
+}
 .div-1-l {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 20rem;
-  margin-top: 8rem;
+  margin-top: 10rem;
+  margin-bottom: 8rem;
 }
 .div-form-l-1 {
   display: flex;
-  width: 90%;
+  width: 20rem;
   align-items: center;
   flex-direction: column;
   height: 25rem;
+  padding: 10px;
   box-shadow: 0px 0px 3rem 0.05rem rgba(126, 125, 125, 0.25);
 }
 .in-div-1 {
@@ -202,4 +206,29 @@
   font-family: var(--font_fam_open);
   font-size: 0.8rem;
   align-self: center;
+}
+
+@media(min-width:481px) and (max-width:768px) and (orientation:landscape)
+{
+.div-1-l{
+  margin-top: 5rem;
+  margin-bottom: 5rem;
+}
+}
+
+@media (min-width:320px) and (max-width:480px)
+{
+html{
+  font-size: 88%;
+}
+
+}
+@media (max-width:319px)
+{
+  html{
+    font-size: 75%;
+  }
+  .div-form-l-1{
+    width: 90%;
+  }
 }

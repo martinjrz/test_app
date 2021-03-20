@@ -53,7 +53,6 @@ export const Signin = () => {
                 const { username } = finalresponse.data.signedInGoogleusers;
                 if (username === "error" || username === "email not found") {
                   await gapiserver.auth2.getAuthInstance().signOut();
-                  // window.location.replace('/signin')
                 } else {
                   const date = new Date();
                   const expiredate = date.setTime(date.getTime() + 36000000);
@@ -61,7 +60,7 @@ export const Signin = () => {
                     path: "/",
                     expires: new Date(expiredate),
                   });
-                    history.push('/home')
+                  return  history.push('/home')
                 }
               });
           },
@@ -94,7 +93,7 @@ export const Signin = () => {
            setrender(true);
            document.body.appendChild(script)
           } else if (rendersigninOrnot === "false") {
-             history.push('/home')
+            return history.push('/home')
           } else setrender(true);
         }
       });
