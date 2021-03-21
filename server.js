@@ -440,7 +440,7 @@ server.use(
             if (googleuser) {
               resolve(googleuser);
             } else {
-              reject(null);
+              resolve(null)
             }
           });
         };
@@ -450,7 +450,7 @@ server.use(
             if (mobileuser) {
               resolve(mobileuser);
             } else {
-              reject(null);
+              resolve(null)
             }
           });
         };
@@ -464,22 +464,40 @@ server.use(
                 const { _id_ } = payload;
                 if (mb_ === "true") {
                   return findmobileuser(_id_).then(async (user_payload) => {
+                    if(!user_payload)
+                    {
+                      remove_cookie(response)
+                      return {cn_value:0,uV_:'null'}
+                    }
                     const { refreshToken } = user_payload;
                     if (refreshToken.includes(__rt)) {
                       user_payload.cart_value = cn__value;
                       await user_payload.save();
                       return { cn_value: user_payload.cart_value, uV_: "ok" };
+                    }
+                    else {
+                      remove_cookie(response)
+                      return {cn_value:0,uV_:'null'}
                     }
                   });
                 } else if (mb_ === "false") {
                   return findgoogleuser(_id_).then(async (user_payload) => {
+                    if(!user_payload)
+                    {
+                      remove_cookie(response)
+                      return {cn_value:0,uV_:"null"}
+                    }
                     const { refreshToken } = user_payload;
                     if (refreshToken.includes(__rt)) {
                       user_payload.cart_value = cn__value;
                       await user_payload.save();
                       return { cn_value: user_payload.cart_value, uV_: "ok" };
                     }
-                  });
+                    else {
+                      remove_cookie(response)
+                      return {cn_value:0,uV_:"null"}
+                    }
+                  })
                 }
               
                   remove_cookie(response)

@@ -11,7 +11,7 @@ import { scriptsetup,googleauthenticaion } from "../gapiserver";
 export const Signin = () => {
   const history=useHistory()
   const cookie = new Cookie();
-  let timer
+  let timer1,timer2
 const initialState={
   m_b:'',
   u_p:''
@@ -185,13 +185,13 @@ const [state, dispatch] = useReducer(reducer, initialState)
             //     return dispatch({type:"M_B",payload:{m_b:e.target.value}})
             //   }}
             onKeyUp={(e)=>{
-              clearTimeout(timer)
-              timer=setTimeout(()=>{
+              clearTimeout(timer1)
+              timer1=setTimeout(()=>{
                 return dispatch({type:"M_B",payload:{m_b:e.target.value}})
-              },1000)
+              },500)
             }}
             onKeyPress={()=>{
-              clearTimeout(timer)
+              clearTimeout(timer1)
             }}
           //   onBlur={(e)=>{
           //  return  dispatch({type:"M_B",payload:{m_b:e.target.value}})
@@ -213,14 +213,14 @@ const [state, dispatch] = useReducer(reducer, initialState)
               //   console.log(e.target.value)
               // }}
               onKeyUp={(e)=>{
-                clearTimeout(timer)
-                timer=setTimeout(()=>{
+                clearTimeout(timer2)
+                timer2=setTimeout(()=>{
                   console.log(e.target.value)
                   return dispatch({type:"U_P",payload:{u_p:e.target.value}})
-                },1000)
+                },500)
               }}
               onKeyPress={(e)=>{
-                clearTimeout(timer)
+                clearTimeout(timer2)
               }}
               autoCorrect="off"
               ref={password_ref}

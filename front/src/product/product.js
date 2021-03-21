@@ -44,7 +44,6 @@ export default class Product extends Component {
             const gapiserver = await gapisetup();
             const authinstance = gapiserver.auth2.getAuthInstance();
             authinstance.signOut();
-            // this.props.history.push("/signin");
             this.redirecttosignedout()
           };
           document.body.appendChild(script);
@@ -80,7 +79,6 @@ export default class Product extends Component {
             const authinstance = gapiserver.auth2.getAuthInstance();
             if (authinstance.currentUser.get().getBasicProfile())
               authinstance.signOut();
-            // this.props.history.push("/signin");
             this.redirecttosignedout()
           };
           document.body.appendChild(script);
@@ -109,7 +107,6 @@ export default class Product extends Component {
       const gapiserver = await gapisetup();
       const authinstance = gapiserver.auth2.getAuthInstance();
       authinstance.signOut();
-      // this.props.history.push("/signin");
       this.redirecttosignedout()
     };
     document.body.style.background = "#3e3f3f";
@@ -178,7 +175,6 @@ export default class Product extends Component {
           };
           document.body.appendChild(script);
         } else {
-          // this.props.history.push("/signin");
           this.redirecttosignedout()
         }
       }
