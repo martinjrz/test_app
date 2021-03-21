@@ -279,11 +279,11 @@ const [state, dispatch] = useReducer(reducer, initialState)
               Signin
             </button>
           </div>
-          <div>
+          <div className='g1-div'>
             <button
               onClick={(e) => signeduser(e)}
               id="g-signin"
-              className="google-signup"
+              className="google-signin"
             ></button>
           </div>
           <div className="last-op-1">
