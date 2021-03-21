@@ -6,7 +6,7 @@ import { Link, useHistory } from "react-router-dom";
 import ReqtoServer from "../_render";
 import base from "../baseurl";
 import { gapisetup } from "../gapiserver";
-import { scriptsetup } from "../gapiserver";
+import { scriptsetup,googleauthenticaion } from "../gapiserver";
 export const Signup = (props) => {
 
    const history=useHistory()
@@ -52,18 +52,22 @@ const reducer=(state,action)=>{
     const elem=document.getElementById('my-signin2')
     const script = await scriptsetup();
     script.onload = async () => {
-window.gapi.load("auth2", () => {
-  const authinstance=  window.gapi.auth2
-          .init({
-            client_id:
-              "1090207276654-b6qp5cl7plo37heaj8qkutqrn0lj92ce.apps.googleusercontent.com",
-            cookiepolicy: "single_host_origin",
-          })
-          authinstance.attachClickHandler(elem,{},(googleuser)=>{
+    const authinstance= await googleauthenticaion
+    authinstance.attachClickHandler(elem,{},(googleuser)=>{
+console.log(googleuser)
+    })
+// window.gapi.load("auth2", () => {
+//   const authinstance=  window.gapi.auth2
+//           .init({
+//             client_id:
+//               "1090207276654-b6qp5cl7plo37heaj8qkutqrn0lj92ce.apps.googleusercontent.com",
+//             cookiepolicy: "single_host_origin",
+//           })
+//           authinstance.attachClickHandler(elem,{},(googleuser)=>{
            
-          // authinstance.signOut()
-          })
-      });
+//           // authinstance.signOut()
+//           })
+//       });
       
    
       // gapiserver.load("signin2", () => {
