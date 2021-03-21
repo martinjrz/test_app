@@ -137,7 +137,7 @@ htmL{
   outline: none;
   color: #ffff;
   font-size: 0.8rem;
-
+  cursor: pointer;
   font-family: var(--font_fam_rale);
 }
 .last-op-2 {
