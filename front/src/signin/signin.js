@@ -38,7 +38,7 @@ const [state, dispatch] = useReducer(reducer, initialState)
     const script = await scriptsetup();
     script.onload = async () => {
       const gapiserver = await gapisetup();
-      const authinstance=await gapiserver.auth2
+      const authinstance=await gapiserver.auth2.getAuthInstance()
       authinstance.signOut()
       gapiserver.load("signin2", () => {
         gapiserver.signin2.render("g-signin", {
