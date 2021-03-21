@@ -6,7 +6,7 @@ import { Link,useHistory} from "react-router-dom";
 import Cookie from "universal-cookie";
 import base from "../baseurl";
 import { gapisetup } from "../gapiserver";
-import { scriptsetup } from "../gapiserver";
+import { scriptsetup,googleauthenticaion } from "../gapiserver";
 
 export const Signin = () => {
   const history=useHistory()
@@ -35,55 +35,91 @@ const [state, dispatch] = useReducer(reducer, initialState)
   const password_ref = React.createRef();
 
   const insertgapiscript = async () => {
+    const elem=document.getElementById('g-signin')
     const script = await scriptsetup();
     script.onload = async () => {
-      const gapiserver = await gapisetup();
-      const authinstance=await gapiserver.auth2.getAuthInstance()
-      authinstance.signOut()
-      gapiserver.load("signin2", () => {
-        gapiserver.signin2.render("g-signin", {
-          width: 180,
-          height: 32,
-          onsuccess: async () => {
-            const user = gapiserver.auth2.getAuthInstance();
-            const ex_email = user.currentUser
-              .get()
-              .getBasicProfile()
-              .getEmail();
-            const _em = {
-              query: `
-                          query{
-                              signedInGoogleusers(email:"${ex_email}"){
-                                  username
-                              }
-                          }
-                          `,
-            };
-            signedinuser(_em)
-              .then((res) => {
-                if (res.status !== 201 && res.status !== 200){
-                }
-                else {
-                  return res.data;
-                }
-              })
-              .then(async (finalresponse) => {
-                const { username } = finalresponse.data.signedInGoogleusers;
-                if (username === "error" || username === "email not found") {
-                  await gapiserver.auth2.getAuthInstance().signOut();
-                } else {
-                  const date = new Date();
-                  const expiredate = date.setTime(date.getTime() + 36000000);
-                  cookie.set("mb_", "false", {
-                    path: "/",
-                    expires: new Date(expiredate),
-                  });
-                  return  history.push('/home')
-                }
-              });
-          },
-        });
-      });
+      const authinstance= await googleauthenticaion()
+      authinstance.attachClickHadler(elem,{},(googleuser)=>{
+        console.log(googleuser)
+        if(googleuser)
+        {
+          const googleuseremail=googleuser.getBasicProfile().getEmail()
+          const _em = {
+            query: `
+                        query{
+                            signedInGoogleusers(email:"${googleuseremail}"){
+                                username
+                            }
+                        }
+                        `,
+          };
+          if(googleuseremail)
+          {
+            signedinuser(_em).then(async payload_res=>{
+              const { username } = payload_res.data.data.signedInGoogleusers;
+              if (username === "error" || username === "email not found") {
+                await authinstance.signOut()
+              } else {
+                const date = new Date();
+                const expiredate = date.setTime(date.getTime() + 36000000);
+                cookie.set("mb_", "false", {
+                  path: "/",
+                  expires: new Date(expiredate),
+                });
+                return  history.push('/home')
+              }
+            })
+          }
+
+        }
+      })
+      // const gapiserver = await gapisetup();
+      // const authinstance=await gapiserver.auth2.getAuthInstance()
+      // authinstance.signOut()
+      // gapiserver.load("signin2", () => {
+      //   gapiserver.signin2.render("g-signin", {
+      //     width: 180,
+      //     height: 32,
+      //     onsuccess: async () => {
+      //       const user = gapiserver.auth2.getAuthInstance();
+      //       const ex_email = user.currentUser
+      //         .get()
+      //         .getBasicProfile()
+      //         .getEmail();
+      //       const _em = {
+      //         query: `
+      //                     query{
+      //                         signedInGoogleusers(email:"${ex_email}"){
+      //                             username
+      //                         }
+      //                     }
+      //                     `,
+      //       };
+      //       signedinuser(_em)
+      //         .then((res) => {
+      //           if (res.status !== 201 && res.status !== 200){
+      //           }
+      //           else {
+      //             return res.data;
+      //           }
+      //         })
+      //         .then(async (finalresponse) => {
+      //           const { username } = finalresponse.data.signedInGoogleusers;
+      //           if (username === "error" || username === "email not found") {
+      //             await gapiserver.auth2.getAuthInstance().signOut();
+      //           } else {
+      //             const date = new Date();
+      //             const expiredate = date.setTime(date.getTime() + 36000000);
+      //             cookie.set("mb_", "false", {
+      //               path: "/",
+      //               expires: new Date(expiredate),
+      //             });
+      //             return  history.push('/home')
+      //           }
+      //         });
+      //     },
+      //   });
+      // });
     };
     document.body.appendChild(script);
   };
