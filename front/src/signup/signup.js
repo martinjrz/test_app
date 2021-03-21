@@ -10,6 +10,7 @@ import { scriptsetup,googleauthenticaion } from "../gapiserver";
 export const Signup = (props) => {
 
    const history=useHistory()
+  let timer1,timer2,timer3,timer4
 const initialstate={
 na:'',
 mn:'',
@@ -134,6 +135,13 @@ const reducer=(state,action)=>{
     };
     document.body.appendChild(script);
   };
+
+const MobileNoValidator=()=>{
+  const letterchecker=/[^a-z]/
+}
+
+
+
   // useeffect method
   useEffect(() => {
     // console.log(states)
@@ -213,8 +221,17 @@ const reducer=(state,action)=>{
             <input
               ref={nameref}
               // onBlur={(e) => Name_setter(e)}
-              onBlur={(e)=>{
-                return dispatch({type:"set_username",name:e.target.value})
+              // onBlur={(e)=>{
+              //   return dispatch({type:"set_username",name:e.target.value})
+              // }}
+              onKeyUp={(e)=>{
+                clearTimeout(timer1)
+                timer1=setTimeout(()=>{
+                  return dispatch({type:"set_username",name:e.target.value})
+                },500)
+              }}
+              onKeyPress={()=>{
+                clearTimeout(timer1)
               }}
               className="in-1"
               placeholder="name"
@@ -223,9 +240,14 @@ const reducer=(state,action)=>{
           </div>
           <div className="in-div-3">
             <input
-              // onBlur={(e) => Mobile_no_setter(e)}
-              onBlur={(e)=>{
-                return dispatch({type:"set_mobile_no",num:e.target.value})
+              onKeyUp={(e)=>{
+                clearTimeout(timer2)
+                timer2=setTimeout(()=>{
+                  return dispatch({type:"set_mobile_no",num:e.target.value})
+                },500)
+              }}
+              onKeyPress={()=>{
+                clearTimeout(timer2)
               }}
               className="in-3"
               placeholder="mobile_no"
@@ -234,16 +256,16 @@ const reducer=(state,action)=>{
           </div>
           <div  className="in-div-2">
             <input
-              // onChange={(e) => Pass_setter(e)}
-              onChange={(e)=>{
-              if(e.target.value.length>1)
-              {
-              }
-                return dispatch({type:"set_password",_up:e.target.value})
+              onKeyUp={(e)=>{
+                clearTimeout(timer3)
+                timer3=setTimeout(()=>{
+                  return dispatch({type:"set_password",_up:e.target.value})
+                },500)
+              }}
+              onKeyPress={()=>{
+                clearTimeout(timer3)
               }}
               autoComplete="off"
-              value={states.pass}
-              autoCorrect="off"
               ref={password_ref}
               className="in-2"
               placeholder="password"
@@ -263,13 +285,16 @@ const reducer=(state,action)=>{
           </div>
           <div className="in-div-4">
             <input
-              // onChange={(e) => repass_setter(e)}
-              onChange={(e)=>{
-                return dispatch({type:"set_repassword",_urp:e.target.value})
+              onKeyUp={(e)=>{
+                clearTimeout(timer4)
+                timer4=setTimeout(()=>{
+                  return dispatch({type:"set_repassword",_urp:e.target.value})
+                },500)
+              }}
+              onKeyPress={()=>{
+                clearTimeout(timer4)
               }}
               autoComplete="off"
-              value={states.repass} 
-              autoCorrect="off"
               ref={repassword_ref}
               className="in-3"
               placeholder="re-password"

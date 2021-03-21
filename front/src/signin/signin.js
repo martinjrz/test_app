@@ -6,6 +6,7 @@ import { Link,useHistory} from "react-router-dom";
 import Cookie from "universal-cookie";
 import base from "../baseurl";
 import { gapisetup } from "../gapiserver";
+import {MdCancel} from 'react-icons/md'
 import { scriptsetup,googleauthenticaion } from "../gapiserver";
 
 export const Signin = () => {
@@ -14,7 +15,8 @@ export const Signin = () => {
   let timer1,timer2
 const initialState={
   m_b:'',
-  u_p:''
+  u_p:'',
+  canceler:false
 }
 const reducer=(state,action)=>{
   switch(action.type){
@@ -22,6 +24,8 @@ const reducer=(state,action)=>{
       return {...state,m_b:action.payload.m_b}
     case "U_P":
       return {...state,u_p:action.payload.u_p}
+      case "cancel_errorer":
+        return {...state,canceler:action.payload.canceler}
       default:
         return {...state}
   }
@@ -84,7 +88,6 @@ const [state, dispatch] = useReducer(reducer, initialState)
 
   // use effect method
   useEffect(async () => {
-    console.log(state.m_b,state.u_p)
     document.body.style.background = "white";
     const _req = new ReqtoServer();
       await _req.render_payload().then(async (res) => {
@@ -105,7 +108,8 @@ const [state, dispatch] = useReducer(reducer, initialState)
         }
       });
       insertgapiscript();
-  });
+    
+  },[]);
 
 
 
@@ -153,7 +157,8 @@ const [state, dispatch] = useReducer(reducer, initialState)
           if(res.status===201 || res.status===200) {
             const { username } = res.data.data.signedInMobileusers;
             if (username === "mobile_no not found" || username === "wrong password") {
-               button.disabled=false
+              button.disabled=false
+              return dispatch({type:"cancel_errorer",payload:{canceler:true}})
             } else {
               const date = new Date();
               const expiredate = date.setTime(date.getTime() + 36000000);
@@ -170,6 +175,20 @@ const [state, dispatch] = useReducer(reducer, initialState)
   if (render)
     return (
       <div className="div-1-l">
+       {state.canceler?
+      <div className='err-alerter'>
+      <p className='wr-er'>
+        Incorrect mobile no. or password
+      </p>
+      <button 
+      onClick={()=>{
+        return dispatch({type:"cancel_errorer",payload:{canceler:false}})
+      }}
+      className='cr-er'>
+      <MdCancel/>
+      </button>
+    </div>:<></> 
+      } 
         <form
           className="div-form-l-1"
           onSubmit={(e) => {
@@ -181,9 +200,6 @@ const [state, dispatch] = useReducer(reducer, initialState)
             <input
             autoComplete="off"
             id="in_f_1" 
-            // onBlur={(e)=>{
-            //     return dispatch({type:"M_B",payload:{m_b:e.target.value}})
-            //   }}
             onKeyUp={(e)=>{
               clearTimeout(timer1)
               timer1=setTimeout(()=>{
@@ -193,9 +209,6 @@ const [state, dispatch] = useReducer(reducer, initialState)
             onKeyPress={()=>{
               clearTimeout(timer1)
             }}
-          //   onBlur={(e)=>{
-          //  return  dispatch({type:"M_B",payload:{m_b:e.target.value}})
-          //   }}
               className="in-1"
               placeholder="mobile_no"
             />
@@ -206,16 +219,9 @@ const [state, dispatch] = useReducer(reducer, initialState)
           >
             <input
               autoComplete="off"
-              // onChange={(e)=>{  
-              //   return dispatch({type:"U_P",payload:{u_p:e.target.value}})
-              // }}
-              // onInput={(e)=>{
-              //   console.log(e.target.value)
-              // }}
               onKeyUp={(e)=>{
                 clearTimeout(timer2)
                 timer2=setTimeout(()=>{
-                  console.log(e.target.value)
                   return dispatch({type:"U_P",payload:{u_p:e.target.value}})
                 },500)
               }}
