@@ -61,7 +61,7 @@ window.gapi.load("auth2", () => {
           })
           authinstance.attachClickHandler(elem,{},(googleuser)=>{
            
-           authinstance.signOut()
+          // authinstance.signOut()
           })
       });
       
