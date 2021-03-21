@@ -284,7 +284,7 @@ const [state, dispatch] = useReducer(reducer, initialState)
               onClick={(e) => signeduser(e)}
               id="g-signin"
               className="google-signin"
-            ></button>
+            >Google signin</button>
           </div>
           <div className="last-op-1">
             <p>Or don't have an account?</p>
