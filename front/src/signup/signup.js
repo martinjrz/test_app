@@ -52,11 +52,19 @@ const reducer=(state,action)=>{
     const elem=document.getElementById('my-signin2')
     const script = await scriptsetup();
     script.onload = async () => {
-      const gapiserver = await gapisetup();
-      const authinstance=gapiserver.auth2
-      authinstance.attachClickHandler(elem,{},(googleuser)=>{
-        console.log(googleuser)
-      })
+window.gapi.load("auth2", () => {
+  const authinstance=  window.gapi.auth2
+          .init({
+            client_id:
+              "1090207276654-b6qp5cl7plo37heaj8qkutqrn0lj92ce.apps.googleusercontent.com",
+            cookiepolicy: "single_host_origin",
+          })
+          authinstance.attachClickHandler(elem,{},(googleuser)=>{
+            console.log(googleuser)
+          })
+      });
+      
+   
       // gapiserver.load("signin2", () => {
       //   gapiserver.signin2.render("my-signin2", {
       //     width: 180,
