@@ -289,13 +289,16 @@ const reducer=(state,action)=>{
               )}
             </span>
           </div>
-          <div className="butt-div-1">
+          <div
+          className="butt-div-1">
             <button className="butt-1">Signup</button>
           </div>
-          <div className='g0-div'>
+          <div 
+           id="my-signin2"
+          className='g0-div'>
             <button
               onSubmit={(e) => submit_form(e)}
-              id="my-signin2"
+             
               className="google-signup"
             >Google Signup</button>
           </div>

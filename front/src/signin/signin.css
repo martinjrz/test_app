@@ -102,11 +102,11 @@ padding: 0.5rem;
     width: calc(90% - 3rem);
     display: flex;
     padding: 0.5rem;
-  
+    cursor: pointer;
   }
   .google-signin {
     width: 100%;
-    cursor: pointer;
+
     letter-spacing: 0.1rem;
     background: var(--butt-color_);
     border: none;

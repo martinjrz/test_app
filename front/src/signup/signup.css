@@ -127,7 +127,7 @@ htmL{
   width: calc(90% - 3rem);
   display: flex;
   padding: 0.5rem;
-
+  cursor: pointer;
 }
 .google-signup {
   width: 100%;
@@ -137,7 +137,7 @@ htmL{
   outline: none;
   color: #ffff;
   font-size: 0.8rem;
-  cursor: pointer;
+
   font-family: var(--font_fam_rale);
 }
 .last-op-2 {
