@@ -11,7 +11,7 @@ import { scriptsetup,googleauthenticaion } from "../gapiserver";
 export const Signin = () => {
   const history=useHistory()
   const cookie = new Cookie();
-
+  let timer
 const initialState={
   m_b:'',
   u_p:''
@@ -73,53 +73,6 @@ const [state, dispatch] = useReducer(reducer, initialState)
 
         }
       })
-      // const gapiserver = await gapisetup();
-      // const authinstance=await gapiserver.auth2.getAuthInstance()
-      // authinstance.signOut()
-      // gapiserver.load("signin2", () => {
-      //   gapiserver.signin2.render("g-signin", {
-      //     width: 180,
-      //     height: 32,
-      //     onsuccess: async () => {
-      //       const user = gapiserver.auth2.getAuthInstance();
-      //       const ex_email = user.currentUser
-      //         .get()
-      //         .getBasicProfile()
-      //         .getEmail();
-      //       const _em = {
-      //         query: `
-      //                     query{
-      //                         signedInGoogleusers(email:"${ex_email}"){
-      //                             username
-      //                         }
-      //                     }
-      //                     `,
-      //       };
-      //       signedinuser(_em)
-      //         .then((res) => {
-      //           if (res.status !== 201 && res.status !== 200){
-      //           }
-      //           else {
-      //             return res.data;
-      //           }
-      //         })
-      //         .then(async (finalresponse) => {
-      //           const { username } = finalresponse.data.signedInGoogleusers;
-      //           if (username === "error" || username === "email not found") {
-      //             await gapiserver.auth2.getAuthInstance().signOut();
-      //           } else {
-      //             const date = new Date();
-      //             const expiredate = date.setTime(date.getTime() + 36000000);
-      //             cookie.set("mb_", "false", {
-      //               path: "/",
-      //               expires: new Date(expiredate),
-      //             });
-      //             return  history.push('/home')
-      //           }
-      //         });
-      //     },
-      //   });
-      // });
     };
     document.body.appendChild(script);
   };
@@ -131,6 +84,7 @@ const [state, dispatch] = useReducer(reducer, initialState)
 
   // use effect method
   useEffect(async () => {
+    console.log(state.m_b,state.u_p)
     document.body.style.background = "white";
     const _req = new ReqtoServer();
       await _req.render_payload().then(async (res) => {
@@ -151,10 +105,13 @@ const [state, dispatch] = useReducer(reducer, initialState)
         }
       });
       insertgapiscript();
-  },[insertgapiscript]);
+  });
 
+
+
+
+ 
   // object funtion
-
   function ReqtoServer() {
     const render = {
       query: `
@@ -222,34 +179,49 @@ const [state, dispatch] = useReducer(reducer, initialState)
           <p className="head-l-1">Signin into account</p>
           <div className="in-div-1">
             <input
-              //onBlur={(e) => set_mn(e)}
-              onClick={(e)=>{
-                setTimeout(()=>{
-
-                  console.log(e.target.value)
-                },1000)
-              }}
-              onBlur={(e)=>{
+            autoComplete="off"
+            id="in_f_1" 
+            // onBlur={(e)=>{
+            //     return dispatch({type:"M_B",payload:{m_b:e.target.value}})
+            //   }}
+            onKeyUp={(e)=>{
+              clearTimeout(timer)
+              timer=setTimeout(()=>{
                 return dispatch({type:"M_B",payload:{m_b:e.target.value}})
-              }}
+              },1000)
+            }}
+            onKeyPress={()=>{
+              clearTimeout(timer)
+            }}
+          //   onBlur={(e)=>{
+          //  return  dispatch({type:"M_B",payload:{m_b:e.target.value}})
+          //   }}
               className="in-1"
               placeholder="mobile_no"
             />
             <span></span>
           </div>
           <div
-            // onChange={(e) => Password_setter(e)}
             className="in-div-2"
           >
             <input
               autoComplete="off"
-              onChange={(e)=>{
-                setTimeout(()=>{
+              // onChange={(e)=>{  
+              //   return dispatch({type:"U_P",payload:{u_p:e.target.value}})
+              // }}
+              // onInput={(e)=>{
+              //   console.log(e.target.value)
+              // }}
+              onKeyUp={(e)=>{
+                clearTimeout(timer)
+                timer=setTimeout(()=>{
                   console.log(e.target.value)
-                },2000)
-                return dispatch({type:"U_P",payload:{u_p:e.target.value}})
+                  return dispatch({type:"U_P",payload:{u_p:e.target.value}})
+                },1000)
               }}
-              value={state.u_p}
+              onKeyPress={(e)=>{
+                clearTimeout(timer)
+              }}
               autoCorrect="off"
               ref={password_ref}
               className="in-2"

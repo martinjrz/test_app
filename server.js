@@ -481,6 +481,10 @@ server.use(
                     }
                   });
                 }
+              
+                  remove_cookie(response)
+                  return { cn_value:0, uV_: "null" };
+             
               }
             });
           } else {

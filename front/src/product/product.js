@@ -248,12 +248,14 @@ export default class Product extends Component {
       this.Requestoserver(typeof_req).then((responseback) => {
         if (responseback.status === 201 || responseback.status === 200) {
           const { cn_value, uV_ } = responseback.data.data.addtocarter;
-          if (uV_ === "ok") {
+          if (uV_ === "ok") { 
+            console.log(uV_)
             this.setState({
               actual_cart_value: cn_value,
             });
           } else if (uV_ === "null") {
-            window.location.reload();
+            console.log(uV_)
+           this.props.history.replace('/signin')
           }
         }
       });
