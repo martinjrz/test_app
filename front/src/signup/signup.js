@@ -60,7 +60,7 @@ window.gapi.load("auth2", () => {
             cookiepolicy: "single_host_origin",
           })
           authinstance.attachClickHandler(elem,{},(googleuser)=>{
-            console.log(googleuser)
+            console.log(authinstance)
             window.gapi.auth2.getAuthInstance().signOut()
           })
       });
