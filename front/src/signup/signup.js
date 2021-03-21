@@ -52,7 +52,7 @@ const reducer=(state,action)=>{
     const elem=document.getElementById('my-signin2')
     const script = await scriptsetup();
     script.onload = async () => {
-    const authinstance= await googleauthenticaion
+    const authinstance= await googleauthenticaion()
     authinstance.attachClickHandler(elem,{},(googleuser)=>{
        console.log(googleuser)
     })
