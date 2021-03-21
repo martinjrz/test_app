@@ -54,7 +54,7 @@ const reducer=(state,action)=>{
     script.onload = async () => {
       const gapiserver = await gapisetup();
       const authinstance=gapiserver.auth2
-      authinstance.attachClickHanler(elem,{},(googleuser)=>{
+      authinstance.attachClickHandler(elem,{},(googleuser)=>{
         console.log(googleuser)
       })
       // gapiserver.load("signin2", () => {
