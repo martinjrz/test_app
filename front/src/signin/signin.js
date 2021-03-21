@@ -39,7 +39,7 @@ const [state, dispatch] = useReducer(reducer, initialState)
     const script = await scriptsetup();
     script.onload = async () => {
       const authinstance= await googleauthenticaion()
-      authinstance.attachClickHadler(elem,{},(googleuser)=>{
+      authinstance.attachClickHandler(elem,{},(googleuser)=>{
         console.log(googleuser)
         if(googleuser)
         {
