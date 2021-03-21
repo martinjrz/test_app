@@ -55,6 +55,35 @@ const reducer=(state,action)=>{
     const authinstance= await googleauthenticaion()
     authinstance.attachClickHandler(elem,{},(googleuser)=>{
        console.log(googleuser)
+       if(googleuser)
+       {
+        const googleusername=googleuser.getBasicProfile().getName()
+        const googleuseremail=googleuser.getBasicProfile.getEmail()
+        const googleusermutation = {
+          query: `
+              mutation{
+                  createGoogleuser(username:"${googleusername}",email:"${googleuseremail}"){
+                      username
+                  }
+              }
+              `,
+        };
+     
+         if(googleusername && googleuseremail)
+         {
+           postuser(googleusermutation).then(payload_res=>{
+             if(payload_res.status===200 || payload_res.status===201)
+             {
+              const { username } = payload_res.data.data.createGoogleuser;
+              if (username === "gmail is already in use") {
+                            authinstance.signOut()
+                          } else {
+                          }
+             }
+           })
+         }
+         authinstance.signOut()
+       }
     })
 // window.gapi.load("auth2", () => {
 //   const authinstance=  window.gapi.auth2
@@ -263,12 +292,12 @@ const reducer=(state,action)=>{
           <div className="butt-div-1">
             <button className="butt-1">Signup</button>
           </div>
-          <div>
+          <div className='g0-div'>
             <button
               onSubmit={(e) => submit_form(e)}
               id="my-signin2"
               className="google-signup"
-            >Sign up with google</button>
+            >Google Signup</button>
           </div>
           <div className="last-op-2">
             <p>Or already have an account?</p>

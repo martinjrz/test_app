@@ -8,6 +8,7 @@
   --font_fam_rale: "Raleway", sans-serif;
   --black_border: 1.2px solid black;
   --ti_color: #0ec253;
+  --butt-color_:#149eee;
 }
 htmL{
   font-size: 100%;
@@ -97,7 +98,7 @@ htmL{
 }
 .butt-div-1 {
   width: 80%;
-  margin-top: 0.5rem;
+  margin-top: 0.3rem;
   display: flex;
   justify-content: center;
 }
@@ -120,19 +121,27 @@ htmL{
   font-size: 1.5rem;
   font-family: var(--font_fam_rale);
 }
+.g0-div{
+  margin-top: 0.5rem;
+  background: var(--butt-color_);
+  width: calc(90% - 3rem);
+  display: flex;
+  padding: 0.5rem;
+
+}
 .google-signup {
-  margin-top: 1rem;
   width: 100%;
-  background: #ffffff;
+  letter-spacing: 0.1rem;
+  background: var(--butt-color_);
   border: none;
   outline: none;
+  color: #ffff;
   font-size: 0.8rem;
-
   font-family: var(--font_fam_rale);
 }
 .last-op-2 {
   display: flex;
-  margin-top: 0.5rem;
+  margin-top: 0.1rem;
   font-family: var(--font_fam_open);
   font-size: 0.78rem;
 }
