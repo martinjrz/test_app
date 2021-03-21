@@ -58,7 +58,7 @@ const reducer=(state,action)=>{
        if(googleuser)
        {
         const googleusername=googleuser.getBasicProfile().getName()
-        const googleuseremail=googleuser.getBasicProfile.getEmail()
+        const googleuseremail=googleuser.getBasicProfile().getEmail()
         const googleusermutation = {
           query: `
               mutation{
