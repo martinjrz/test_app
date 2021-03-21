@@ -216,14 +216,14 @@ htmL{
 }
 }
 
-@media (min-width:320px) and (max-width:480px)
+@media (min-width:321px) and (max-width:480px)
 {
 html{
   font-size: 88%;
 }
 
 }
-@media (max-width:319px)
+@media (max-width:320px)
 {
   html{
     font-size: 75%;

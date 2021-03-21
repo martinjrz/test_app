@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useReducer} from "react";
 import "./signin.css";
 import { AiOutlineEye } from "react-icons/ai";
 import { AiOutlineEyeInvisible } from "react-icons/ai";
@@ -11,17 +11,35 @@ import { scriptsetup } from "../gapiserver";
 export const Signin = () => {
   const history=useHistory()
   const cookie = new Cookie();
+
+const initialState={
+  m_b:'',
+  u_p:''
+}
+const reducer=(state,action)=>{
+  switch(action.type){
+    case "M_B":
+      return {...state,m_b:action.payload.m_b}
+    case "U_P":
+      return {...state,u_p:action.payload.u_p}
+      default:
+        return {...state}
+  }
+}
+const [state, dispatch] = useReducer(reducer, initialState)
+
+
+
   const [hidepassword, showpassword] = useState(false);
-  const [hide, show] = useState(true);
   const [render, setrender] = useState(null);
-  const [password, setpassword] = useState("");
-  const [mn_, setmn_] = useState("");
   const password_ref = React.createRef();
 
   const insertgapiscript = async () => {
     const script = await scriptsetup();
     script.onload = async () => {
       const gapiserver = await gapisetup();
+      const authinstance=await gapiserver.auth2
+      authinstance.signOut()
       gapiserver.load("signin2", () => {
         gapiserver.signin2.render("g-signin", {
           width: 180,
@@ -78,12 +96,20 @@ export const Signin = () => {
   // use effect method
   useEffect(async () => {
     document.body.style.background = "white";
+
+    // const script=await scriptsetup()
+    // script.onload=async()=>{
+    //   const gapiserver=await gapisetup()
+    //   const authinstance=gapiserver.auth2.getAuthInstance()
+    //   if(authinstance.currentUser.get())
+    //   authinstance.signOut()  
+    // }
     const _req = new ReqtoServer();
+    
       await _req.render_payload().then(async (res) => {
         if (res.status === 200 || res.status === 201) {
           const { rendersigninOrnot } = res.data.data;
           if (rendersigninOrnot === "true") {
-            console.log(' i amd rednering ')
             const script=await scriptsetup()
             script.onload=async ()=>{
            const gapiserver=await gapisetup()
@@ -97,7 +123,7 @@ export const Signin = () => {
           } else setrender(true);
         }
       });
-    insertgapiscript();
+      insertgapiscript();
   },[insertgapiscript]);
 
   // object funtion
@@ -124,25 +150,13 @@ export const Signin = () => {
       password_ref.current.type = "text";
     }
   };
-  const Password_setter = (e) => {
-    setpassword(e.target.value);
-    if (hide) {
-      show(true);
-    } else {
-      show(false);
-    }
-  };
-  const set_mn = (e) => {
-    setmn_(e.target.value);
-  };
-
   const signeduser = (e) => {
     e.preventDefault();
-    if (mn_ && password) {
+    if (state.m_b && state.u_p) {
       const _da = {
         query: `
                 query{
-                    signedInMobileusers(pass:"${password}",mobile_no:"${mn_}"){
+                    signedInMobileusers(pass:"${state.u_p}",mobile_no:"${state.m_b}"){
                         username
                     }
                 }
@@ -181,19 +195,34 @@ export const Signin = () => {
           <p className="head-l-1">Signin into account</p>
           <div className="in-div-1">
             <input
-              onBlur={(e) => set_mn(e)}
+              //onBlur={(e) => set_mn(e)}
+              onClick={(e)=>{
+                setTimeout(()=>{
+
+                  console.log(e.target.value)
+                },1000)
+              }}
+              onBlur={(e)=>{
+                return dispatch({type:"M_B",payload:{m_b:e.target.value}})
+              }}
               className="in-1"
               placeholder="mobile_no"
             />
             <span></span>
           </div>
           <div
-            value={password}
-            onChange={(e) => Password_setter(e)}
+            // onChange={(e) => Password_setter(e)}
             className="in-div-2"
           >
             <input
               autoComplete="off"
+              onChange={(e)=>{
+                setTimeout(()=>{
+                  console.log(e.target.value)
+                },2000)
+                return dispatch({type:"U_P",payload:{u_p:e.target.value}})
+              }}
+              value={state.u_p}
               autoCorrect="off"
               ref={password_ref}
               className="in-2"
@@ -201,7 +230,7 @@ export const Signin = () => {
               type="password"
             />
             <span onClick={() => hide_or_show()} className="hide-l-1">
-              {password ? (
+              {state.u_p ? (
                 hidepassword ? (
                   <AiOutlineEye />
                 ) : (

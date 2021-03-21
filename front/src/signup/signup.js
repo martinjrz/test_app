@@ -10,29 +10,35 @@ import { scriptsetup } from "../gapiserver";
 export const Signup = (props) => {
 
    const history=useHistory()
-// const _name=""
-// const reducer=(state,action)=>{
-//   switch (action.type)
-//   {
-//     case "set_name":
-//       return action.payload.name
-//   }
+const initialstate={
+na:'',
+mn:'',
+pass:'',
+repass:''
+}
+const reducer=(state,action)=>{
+  // console.log(state)
+  switch (action.type)
+  {
+    case "set_username":
+      return {...state,na:action.name}
+      case "set_mobile_no":
+        return{...state,mn:action.num}
+        case "set_password":
+          return {...state,pass:action._up}
+          case "set_repassword":
+            return {...state,repass:action._urp}
+      default:
+        return {...state}
+  }
 
-// // }
-//   const [state, dispatch] = useReducer(reducer,_name)
+}
+  const [states, dispatch] = useReducer(reducer,initialstate)
   const [hidepass, showpass] = useState(false);
   const [hiderepass, showrepass] = useState(false);
-  const [hide, show] = useState(true);
-  const [hider, showr] = useState(true);
   const [render_signup_page, setrender_of_signup_page] = useState(null);
   const [renderdiv1, setrenderdiv1] = useState(false);
 
-  const [pass, setpass] = useState("");
-  const [repass, setrepass] = useState("");
-  const [mn, setmn] = useState("");
-  const [na, setna] = useState("");
-
-  
   const password_ref = React.createRef();
   const repassword_ref = React.createRef();
   const nameref = React.createRef();
@@ -83,6 +89,7 @@ export const Signup = (props) => {
   };
   // useeffect method
   useEffect(() => {
+    // console.log(states)
     const _req_by_signup = new ReqtoServer();
     _req_by_signup.render_payload().then((res) => {
       if (res.status === 200 || res.status === 201) {
@@ -108,25 +115,6 @@ export const Signup = (props) => {
       password_ref.current.type = "text";
     }
   };
-
-  const Pass_setter =async (e) => {
-   await setpass(e.target.value);
-    if (hide) {
-      show(true);
-    } else {
-      show(false);
-    }
-  };
-  const repass_setter = (e) => {
- 
-    setrepass(e.target.value);
-  
-    if (hider) {
-      showr(true);
-    } else {
-      showr(false);
-    }
-  };
   const hider_or_showr = () => {
     if (hiderepass) {
       showrepass(false);
@@ -135,13 +123,6 @@ export const Signup = (props) => {
       showrepass(true);
       repassword_ref.current.type = "text";
     }
-  };
-  //change_name
-  const Name_setter = (e) => {
-    setna(e.target.value);
-  };
-  const Mobile_no_setter = (e) => {
-    setmn(e.target.value);
   };
 
   //submit the form
@@ -166,7 +147,7 @@ export const Signup = (props) => {
     //     }
     //   });
     // }
-    setrenderdiv1(true);
+    // setrenderdiv1(true);
   };
   const goback=(e)=>{
     e.preventDefault()
@@ -184,10 +165,10 @@ export const Signup = (props) => {
           <div className="in-div-1">
             <input
               ref={nameref}
-              onBlur={(e) => Name_setter(e)}
-              // onBlur={(e)=>{
-              //   return dispatch({type:"set_name",payload:{name:e.target.value}})
-              // }}
+              // onBlur={(e) => Name_setter(e)}
+              onBlur={(e)=>{
+                return dispatch({type:"set_username",name:e.target.value})
+              }}
               className="in-1"
               placeholder="name"
             />
@@ -195,7 +176,10 @@ export const Signup = (props) => {
           </div>
           <div className="in-div-3">
             <input
-              onBlur={(e) => Mobile_no_setter(e)}
+              // onBlur={(e) => Mobile_no_setter(e)}
+              onBlur={(e)=>{
+                return dispatch({type:"set_mobile_no",num:e.target.value})
+              }}
               className="in-3"
               placeholder="mobile_no"
             />
@@ -203,9 +187,15 @@ export const Signup = (props) => {
           </div>
           <div  className="in-div-2">
             <input
-              onChange={(e) => Pass_setter(e)}
+              // onChange={(e) => Pass_setter(e)}
+              onChange={(e)=>{
+              if(e.target.value.length>1)
+              {
+              }
+                return dispatch({type:"set_password",_up:e.target.value})
+              }}
               autoComplete="off"
-              value={pass}
+              value={states.pass}
               autoCorrect="off"
               ref={password_ref}
               className="in-2"
@@ -213,7 +203,7 @@ export const Signup = (props) => {
               type="password"
             />
             <span onClick={() => hide_or_show()} className="hide-l-1">
-              {pass ? (
+              {states.pass ? (
                 hidepass ? (
                   <AiOutlineEye />
                 ) : (
@@ -226,18 +216,22 @@ export const Signup = (props) => {
           </div>
           <div className="in-div-4">
             <input
-              onChange={(e) => repass_setter(e)}
+              // onChange={(e) => repass_setter(e)}
+              onChange={(e)=>{
+                return dispatch({type:"set_repassword",_urp:e.target.value})
+              }}
               autoComplete="off"
-              value={repass} 
+              value={states.repass} 
               autoCorrect="off"
               ref={repassword_ref}
               className="in-3"
-              value={repass}
               placeholder="re-password"
               type="password"
             />
-            <span onClick={() => hider_or_showr()} className="hide-l-1">
-              {repass ? (
+            <span
+             onClick={() => hider_or_showr()}
+              className="hide-l-1">
+              {states.repass ? (
                 hiderepass ? (
                   <AiOutlineEye />
                 ) : (
