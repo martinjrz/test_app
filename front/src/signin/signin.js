@@ -96,16 +96,7 @@ const [state, dispatch] = useReducer(reducer, initialState)
   // use effect method
   useEffect(async () => {
     document.body.style.background = "white";
-
-    // const script=await scriptsetup()
-    // script.onload=async()=>{
-    //   const gapiserver=await gapisetup()
-    //   const authinstance=gapiserver.auth2.getAuthInstance()
-    //   if(authinstance.currentUser.get())
-    //   authinstance.signOut()  
-    // }
     const _req = new ReqtoServer();
-    
       await _req.render_payload().then(async (res) => {
         if (res.status === 200 || res.status === 201) {
           const { rendersigninOrnot } = res.data.data;

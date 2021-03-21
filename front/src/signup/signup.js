@@ -49,41 +49,46 @@ const reducer=(state,action)=>{
   };
 
   const insertgapiscript = async () => {
+    const elem=document.getElementById('my-signin2')
     const script = await scriptsetup();
     script.onload = async () => {
       const gapiserver = await gapisetup();
-      gapiserver.load("signin2", () => {
-        gapiserver.signin2.render("my-signin2", {
-          width: 180,
-          height: 32,
-          onsuccess: async () => {
-            const user = gapiserver.auth2.getAuthInstance();
-            const ex_user = user.currentUser.get().getBasicProfile().getName();
-            const ex_email = user.currentUser
-              .get()
-              .getBasicProfile()
-              .getEmail();
-            const googleusermutation = {
-              query: `
-                  mutation{
-                      createGoogleuser(username:"${ex_user}",email:"${ex_email}"){
-                          username
-                      }
-                  }
-                  `,
-            };
-            postuser(googleusermutation).then((res) => {
-              if (res.status === 200 || res.status === 201) {
-                const { username } = res.data.data.createGoogleuser;
-                if (username === "gmail is already in use") {
-                  user.signOut();
-                } else {
-                }
-              }
-            });
-          },
-        });
-      });
+      const authinstance=gapiserver.auth2
+      authinstance.attachClickHanler(elem,{},(googleuser)=>{
+        console.log(googleuser)
+      })
+      // gapiserver.load("signin2", () => {
+      //   gapiserver.signin2.render("my-signin2", {
+      //     width: 180,
+      //     height: 32,
+      //     onsuccess: async () => {
+      //       const user = gapiserver.auth2.getAuthInstance();
+      //       const ex_user = user.currentUser.get().getBasicProfile().getName();
+      //       const ex_email = user.currentUser
+      //         .get()
+      //         .getBasicProfile()
+      //         .getEmail();
+      //       const googleusermutation = {
+      //         query: `
+      //             mutation{
+      //                 createGoogleuser(username:"${ex_user}",email:"${ex_email}"){
+      //                     username
+      //                 }
+      //             }
+      //             `,
+      //       };
+      //       postuser(googleusermutation).then((res) => {
+      //         if (res.status === 200 || res.status === 201) {
+      //           const { username } = res.data.data.createGoogleuser;
+      //           if (username === "gmail is already in use") {
+      //             user.signOut();
+      //           } else {
+      //           }
+      //         }
+      //       });
+      //     },
+      //   });
+      // });
     };
     document.body.appendChild(script);
   };
@@ -250,7 +255,7 @@ const reducer=(state,action)=>{
               onSubmit={(e) => submit_form(e)}
               id="my-signin2"
               className="google-signup"
-            ></button>
+            >Sign up with google</button>
           </div>
           <div className="last-op-2">
             <p>Or already have an account?</p>
