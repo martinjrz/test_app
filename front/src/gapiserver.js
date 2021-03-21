@@ -15,7 +15,20 @@ export const gapisetup = () => {
     });
   });
 };
-
+export const googleauthenticaion=()=>{
+  return new Promise((resolve,reject)=>{
+    return window.gapi.load("auth2",async()=>{
+    const author= await window.gapi.auth2.init({
+        client_id:
+        "1090207276654-b6qp5cl7plo37heaj8qkutqrn0lj92ce.apps.googleusercontent.com",
+        cookiepolicy: "single_host_origin",
+      })
+      if(author)
+      resolve(author)
+      else reject(null)
+    })
+  })
+}
 export const scriptsetup = () => {
   const script = document.createElement("script");
   script.src = "https://apis.google.com/js/platform.js";

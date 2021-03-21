@@ -54,7 +54,7 @@ const reducer=(state,action)=>{
     script.onload = async () => {
     const authinstance= await googleauthenticaion
     authinstance.attachClickHandler(elem,{},(googleuser)=>{
-console.log(googleuser)
+       console.log(googleuser)
     })
 // window.gapi.load("auth2", () => {
 //   const authinstance=  window.gapi.auth2
