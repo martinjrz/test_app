@@ -1,14 +1,16 @@
 :root {
   --border: 1px solid red;
-  --border_bottom: 2px solid black;
+  --border_bottom: 1px solid black;
   --font_fam: "Roboto", sans-serif;
   --font_fam_open: "Open Sans", sans-serif;
   --font_fam_qua: "Quattrocento", serif;
   --font_fam_oswald: "Oswald", sans-serif;
   --font_fam_rale: "Raleway", sans-serif;
-  --black_border: 1.2px solid black;
+  --black_border: 1px solid black;
   --ti_color: #0ec253;
+  --disable_button_color:#5cdb95;
   --butt-color_:#149eee;
+  --bottom-border-color:#a5a1a1;
 }
 htmL{
   font-size: 100%;
@@ -23,41 +25,50 @@ htmL{
 }
 .div-form-l-1 {
   display: flex;
-  width: 20rem;
+  width: 18rem;
   align-items: center;
   flex-direction: column;
   height: 25rem;
   padding: 10px;
-  box-shadow: 0px 0px 3rem 0.05rem rgba(126, 125, 125, 0.25);
+ 
+}
+.div-form-shu-l-1{
+  height: 28rem;
+ box-shadow: 0px 0px 3rem 0.05rem rgba(126, 125, 125, 0.25);
 }
 .in-div-1 {
   width: 90%;
   display: flex;
   justify-content: center;
   border: none;
-  border-bottom: var(--border);
-  margin-bottom: 2rem;
+  border-bottom:var(--border_bottom) ;
+   border-color:  var(--bottom-border-color);
 }
 .in-div-2 {
   width: 90%;
+  margin-top: 1rem;
   display: flex;
   justify-content: center;
-  border-bottom: var(--border);
-  margin-bottom: 2rem;
+  border-bottom:var(--border_bottom) ;
+  border-color:  var(--bottom-border-color);
+
 }
 .in-div-3 {
+  margin-top: 1rem;
   width: 90%;
   display: flex;
   justify-content: center;
   border: none;
-  border-bottom: var(--border);
-  margin-bottom: 2rem;
+  border-bottom:var(--border_bottom) ;
+  border-color: var(--bottom-border-color);
 }
 .in-div-4 {
   width: 90%;
+  margin-top: 1rem;
   display: flex;
   justify-content: center;
-  border-bottom: var(--border);
+  border-bottom:var(--border_bottom) ;
+  border-color:  var(--bottom-border-color);
   margin-bottom: 1rem;
 }
 .in-1 {
@@ -98,15 +109,18 @@ htmL{
 }
 .butt-div-1 {
   width: 80%;
-  margin-top: 0.3rem;
+  margin-top: 0.5rem;
   display: flex;
   justify-content: center;
+  margin-bottom: 0.3rem;
 }
 .butt-1 {
   width: 100%;
+  border-radius: 0.4rem;
   font-family: var(--font_fam_rale);
   letter-spacing: 0.05rem;
-  font-size: 1rem;
+  font-size: 0.9rem;
+  letter-spacing: 0.1rem;
   outline: none;
   border: none;
   padding: 0.5rem;
@@ -128,6 +142,7 @@ htmL{
   display: flex;
   padding: 0.5rem;
   cursor: pointer;
+  border-radius: 0.4rem;
 }
 .google-signup {
   width: 100%;
@@ -145,6 +160,7 @@ htmL{
   margin-top: 0.1rem;
   font-family: var(--font_fam_open);
   font-size: 0.78rem;
+  opacity: 0.7;
 }
 .co-l-1 {
   outline: none;

@@ -1,6 +1,6 @@
 :root{
     --border:1px solid red;
-    --border_bottom:2px solid black;
+    --border_bottom:1px solid black;
     --font_fam:'Roboto', sans-serif;
     --font_fam_open:'Open Sans', sans-serif;
     --font_fam_qua: 'Quattrocento', serif;
@@ -8,6 +8,7 @@
     --font_fam_rale:'Raleway', sans-serif;
     --butt-color_:#149eee;
     --error_color:#ffc1d0;
+    --signinbutton:#62db86;
 }
 
 .div-1-l{
@@ -21,7 +22,7 @@
 } 
 .err-alerter{
     display: flex;
-    width: 21.2rem;
+    width: 19.2rem;
     justify-content: space-around;
     margin-bottom: 0.5rem;
     background: var(--error_color);
@@ -44,28 +45,33 @@
 }
 .div-form-l-1{
     display: flex;
-    width: 20rem;
+    width:18rem;
     align-items: center;
     flex-direction: column;
     height: 25rem;
     padding: 10px;
-    box-shadow: 0px 0px 3rem 0.05rem rgba(126, 125, 125, 0.25);
+   
 }
-.in-div-1{
+.div-form-shd-l-1{
+    box-shadow: 0px 10px 3rem 0.05rem rgba(126, 125, 125, 0.25);
+     /* box-shadow: 0px 20px 3rem 0.05rem rgb(226, 12, 12); */
+}
+.sgn-div-1{
 width: 90%;
 display: flex;
 justify-content: center;
 border: none;
-border-bottom:var(--border) ;
-margin-bottom: 2rem;
+border-bottom:var(--border_bottom) ;
+border-color: #757474;
 }
 
-.in-div-2{
+.sgn-div-2{
     width: 90%;
     display: flex;
     justify-content: center;
-    border-bottom:var(--border) ;
-    margin-bottom: 2rem;
+    border-bottom:var(--border_bottom) ;
+    margin-top: 2rem;
+    border-color: #757474;
     }
    
 .in-1{
@@ -88,21 +94,26 @@ margin-bottom: 2rem;
     letter-spacing: 0.05rem;
 }
 
-.butt-div-1{
+.butt-div-2{
     width: 80%;
-    margin-top: 0.5rem;
+    margin-top: 2rem;
     display: flex;
+    margin-bottom: 0.5rem;
     justify-content: center;
-    
+   
 }
 .butt-1{
 width: 100%;
 font-family:var(--font_fam_rale);
 letter-spacing: 0.05rem;
-font-size: 1rem;
+font-size: 0.9rem;
+letter-spacing: 0.1rem;
+background:var(--signinbutton);
+color:#ffff;
 outline: none;
 border: none;
 padding: 0.5rem;
+cursor: pointer;
 }
 .hide-l-1{
     display: flex;
@@ -118,6 +129,7 @@ padding: 0.5rem;
     margin-top: 2rem;
     font-family: var(--font_fam_open);
     font-size:0.78rem;
+    opacity: 0.7;
 }
 #link-1{
     align-self: center;
@@ -130,6 +142,7 @@ padding: 0.5rem;
     display: flex;
     padding: 0.5rem;
     cursor: pointer;
+    border-radius:0.4rem ;
   }
   .google-signin {
     width: 100%;

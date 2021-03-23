@@ -5,11 +5,13 @@ import { AiOutlineEyeInvisible } from "react-icons/ai";
 import { Link, useHistory } from "react-router-dom";
 import ReqtoServer from "../_render";
 import base from "../baseurl";
-import { gapisetup } from "../gapiserver";
+import {Mobilenoinvalid, Nameerror,Passwordlengtherror} from '../error/error'
+import '../error/error.css'
 import { scriptsetup,googleauthenticaion } from "../gapiserver";
 export const Signup = (props) => {
 
    const history=useHistory()
+   let signupbutton
   let timer1,timer2,timer3,timer4
 const initialstate={
 na:'',
@@ -29,12 +31,18 @@ const reducer=(state,action)=>{
           return {...state,pass:action._up}
           case "set_repassword":
             return {...state,repass:action._urp}
+          case "show_name_error":
+            return {...state,shownameerrorer:action.payload.show}
       default:
         return {...state}
   }
 
 }
   const [states, dispatch] = useReducer(reducer,initialstate)
+
+  const [formsubmitter,enableformsubmitter]=useState(false)
+  const [mobilenoerror,setmobileerror]=useState(false)
+  const [nameerrorshower,setnameerrorshower]=useState(false)
   const [hidepass, showpass] = useState(false);
   const [hiderepass, showrepass] = useState(false);
   const [render_signup_page, setrender_of_signup_page] = useState(null);
@@ -136,15 +144,11 @@ const reducer=(state,action)=>{
     document.body.appendChild(script);
   };
 
-const MobileNoValidator=()=>{
-  const letterchecker=/[^a-z]/
-}
-
 
 
   // useeffect method
   useEffect(() => {
-    // console.log(states)
+ signupbutton=document.getElementById('signup_button')
     const _req_by_signup = new ReqtoServer();
     _req_by_signup.render_payload().then((res) => {
       if (res.status === 200 || res.status === 201) {
@@ -153,13 +157,77 @@ const MobileNoValidator=()=>{
           setrender_of_signup_page(true);
         } else if (rendersigninOrnot === "false") {
           setrender_of_signup_page(false);
-         return history.push('/home')
-        } else setrender_of_signup_page(true);
+       return history.push('/home')
+      } else setrender_of_signup_page(true);
       }
     });
     document.body.style.background = "white";
     insertgapiscript();
-  },[insertgapiscript]);
+    shownameerror()
+    MobileNoValidator()
+    Enablesubmitbutton()
+ 
+  });
+  // mobile error
+  const MobileNoValidator=()=>{
+    const {mn}=states
+    const checker_=/[\sA-Z\\^+=-_)(!@#$%&*)?/|><.,:;{}['"~`]]/gi
+    const validmobileno=mn.match(checker_)
+    if(mn)
+    {
+      if(validmobileno || mn.length!==10)
+      {
+        setmobileerror(true)
+    
+      }
+      else {
+        setmobileerror(false)
+      }
+    
+    }
+    else {
+      setmobileerror(false)
+    }
+    }
+// name error 
+  const shownameerror=()=>{
+    const {na}=states
+  const checker=/^[A-Z]{3,}/gi
+  const checker1=/[\s!@#$%^&*()\-_+=\\?><.,/"':;~`|]/
+  const matcher=na.match(checker)
+  const spacechecker =na.match(checker1)
+if(states.na)
+{
+  if(!matcher || spacechecker )
+  {
+    setnameerrorshower(true)
+  }
+  else{setnameerrorshower(false)}
+  }
+  else setnameerrorshower(false)     
+}
+  const Enablesubmitbutton=(e)=>{
+    const {mn,na,pass,repass}=states
+    if(signupbutton)
+    {
+      if(mn && na && pass && repass 
+        && pass===repass && 
+        pass.length>=8 && !mobilenoerror
+         && !nameerrorshower 
+         )
+      {
+        enableformsubmitter(true)
+        signupbutton.disabled=false
+        signupbutton.style.background='#0ec253'
+      }
+      else 
+      {
+        enableformsubmitter(false)
+        signupbutton.disabled=true
+        signupbutton.style.background="#5cdb95"
+      }
+    }
+  }
 
   const hide_or_show = () => {
     if (hidepass) {
@@ -183,25 +251,26 @@ const MobileNoValidator=()=>{
   //submit the form
   const submit_form = (e) => {
     e.preventDefault();
-    // if (pass && repass && pass === repass && mn && na) {
-    //   console.log("done");
-    //   const register_user = {
-    //     query: `
-    //         mutation{
-    //             createMobileuser(username:"${na}",password:"${pass}",mobile_no:"${mn}"){
-    //                 username
-    //             }
-    //         }
-    //         `,
-    //   };
-    //   postuser(register_user).then((response) => {
-    //     if (response.status !== 200 && response.status !== 201) {
-    //       throw new Error("server error");
-    //     } else {
-    //       // console.log(response)
-    //     }
-    //   });
-    // }
+    if (formsubmitter) {
+      console.log("done");
+      const {na,pass,mn}=states
+      const register_user = {
+        query: `
+            mutation{
+                createMobileuser(username:"${na}",password:"${pass}",mobile_no:"${mn}"){
+                    username
+                }
+            }
+            `,
+      };
+      postuser(register_user).then((response) => {
+        if (response.status !== 200 && response.status !== 201) {
+          throw new Error("server error");
+        } else {
+           console.log(response)
+        }
+      });
+    }
     // setrenderdiv1(true);
   };
   const goback=(e)=>{
@@ -215,7 +284,8 @@ const MobileNoValidator=()=>{
 
     return (
       <div className="div-1-l">
-        <form className="div-form-l-1" onSubmit={(e) => submit_form(e)}>
+        <form className="div-form-l-1 div-form-shu-l-1"  
+        onSubmit={(e) => submit_form(e)}>
           <p className="head-l-1">Signup into account</p>
           <div className="in-div-1">
             <input
@@ -226,9 +296,11 @@ const MobileNoValidator=()=>{
               // }}
               onKeyUp={(e)=>{
                 clearTimeout(timer1)
+
                 timer1=setTimeout(()=>{
+                  
                   return dispatch({type:"set_username",name:e.target.value})
-                },500)
+                },800)
               }}
               onKeyPress={()=>{
                 clearTimeout(timer1)
@@ -238,13 +310,17 @@ const MobileNoValidator=()=>{
             />
             <span></span>
           </div>
+             {nameerrorshower?<span className="er-l-0">
+            <Nameerror/>
+          </span>:<></>}
           <div className="in-div-3">
             <input
               onKeyUp={(e)=>{
                 clearTimeout(timer2)
                 timer2=setTimeout(()=>{
+                  MobileNoValidator(e.target.value)
                   return dispatch({type:"set_mobile_no",num:e.target.value})
-                },500)
+                },800)
               }}
               onKeyPress={()=>{
                 clearTimeout(timer2)
@@ -254,13 +330,17 @@ const MobileNoValidator=()=>{
             />
             <span></span>
           </div>
+         {mobilenoerror? <span className='er-l-1'>
+            <Mobilenoinvalid/>
+          </span>:<></> }
+
           <div  className="in-div-2">
             <input
               onKeyUp={(e)=>{
                 clearTimeout(timer3)
                 timer3=setTimeout(()=>{
                   return dispatch({type:"set_password",_up:e.target.value})
-                },500)
+                },400)
               }}
               onKeyPress={()=>{
                 clearTimeout(timer3)
@@ -283,13 +363,16 @@ const MobileNoValidator=()=>{
               )}
             </span>
           </div>
+          {states.pass &&  states.pass.length <8 ?<span className='er-l-2'>
+          <Passwordlengtherror/>
+          </span>:<></>}
           <div className="in-div-4">
             <input
               onKeyUp={(e)=>{
                 clearTimeout(timer4)
                 timer4=setTimeout(()=>{
                   return dispatch({type:"set_repassword",_urp:e.target.value})
-                },500)
+                },400)
               }}
               onKeyPress={()=>{
                 clearTimeout(timer4)
@@ -316,7 +399,11 @@ const MobileNoValidator=()=>{
           </div>
           <div
           className="butt-div-1">
-            <button className="butt-1">Signup</button>
+            <button
+            disabled={true}
+            onClick={(e)=>submit_form(e)}
+            id="signup_button"
+            className="butt-1">Signup</button>
           </div>
           <div 
            id="my-signin2"

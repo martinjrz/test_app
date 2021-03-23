@@ -1,0 +1,36 @@
+.er-l-0{
+    width:calc(100% - 32px);
+    padding: 0;
+    line-height:auto;
+    display: flex;
+     height:1rem; 
+    align-items: center;
+    letter-spacing: 0.02rem;
+    color: #ff0000;
+    margin-bottom: 0.2rem;
+    font-family: var(--font_fam_open);
+  }
+  .er-l-1{
+    width:calc(100% - 32px);
+    padding: 0;
+    line-height:auto;
+    display: flex;
+     height:1rem; 
+    align-items: center;
+    letter-spacing: 0.02rem;
+    color: #ff0000;
+    margin-bottom: 0.2rem;
+    font-family: var(--font_fam_open);
+  }
+
+  .er-l-2{
+    width:calc(100% - 32px);
+    padding: 0;
+    line-height:auto;
+    font-family: var(--font_fam_open);
+    display: flex;
+     height:2rem; 
+     letter-spacing: 0.02rem;
+    align-items: center;
+    color: #ff0000;
+  }

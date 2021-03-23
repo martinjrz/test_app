@@ -1,9 +1,9 @@
 import React from 'react'
 
-export function Name_error() {
+export function Nameerror() {
     return (
-         <p style={{opacity:'0.6',fontSize:'0.8rem'}}>
-            ! enter your name
+         <p style={{ opacity:'0.7',fontSize:'0.7rem'}}>
+            !enter valid username
          </p>
         
     )
@@ -16,9 +16,9 @@ export function Name_error() {
     )
 }
 
-export function Password_length_error() {
+export function Passwordlengtherror() {
     return (
-        <p style={{opacity:'0.6',fontSize:'0.8rem'}}>! password must be at least 8 characters</p>
+        <p style={{opacity:'0.7',fontSize:'0.7rem'}}>! password must be at least 8 characters including number</p>
     )
 }
 export function Mobile_no_error() {
@@ -41,17 +41,17 @@ export function  Valid_no() {
         <p style={{opacity:'0.6',fontSize:'0.8rem'}}>! enter valid mobile no.</p>
     )
 }
-export function  Mobile_no_invalid(params) {
+export function  Mobilenoinvalid() {
     return(
-        <p style={{opacity:'0.6',fontSize:'0.8rem'}}>! enter valid mobile no.</p>
+        <p style={{opacity:'0.7',fontSize:'0.7rem'}}>! enter valid mobile no.</p>
     )
 }
-export function  Mobile_no_empty(params) {
+export function  Mobile_no_empty() {
     return(
         <p style={{opacity:'0.6',fontSize:'0.8rem'}}>! enter your mobile no.</p>
     )
 }
-export function Password_empty(params) {
+export function Password_empty(s) {
     return(
         <p style={{opacity:'0.6',fontSize:'0.8rem'}}>! enter your password</p>
     )
