@@ -1,0 +1,25 @@
+
+.msg-shower-1
+{
+display: flex;
+justify-content: space-around;
+width: 19.1rem;
+margin-bottom: 0.5rem;
+background: var(--error_color);
+}
+.sg-err-txt{
+    font-size: 0.75rem;
+    align-self: center;
+    font-family: var(--font_fam_open);
+    color: #333232;
+}
+.sg-cl{
+    cursor: pointer;
+    align-self: center;
+    text-align: center;
+    display: flex;
+    background: var(--error_color);
+    border: none;
+    outline: none;
+    color:#333232;
+}

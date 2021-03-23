@@ -8,6 +8,7 @@ import base from "../baseurl";
 import {Mobilenoinvalid, Nameerror,Passwordlengtherror} from '../error/error'
 import '../error/error.css'
 import { scriptsetup,googleauthenticaion } from "../gapiserver";
+import Msgshower from './msgshower'
 export const Signup = (props) => {
 
    const history=useHistory()
@@ -263,10 +264,22 @@ if(states.na)
             }
             `,
       };
+      const signupbutton_=document.getElementById('signup_button')
+      signupbutton_.innerText='Signup...'
+      signupbutton_.disabled=true
+      signupbutton_.style.background='#5cdb95'
+     
       postuser(register_user).then((response) => {
         if (response.status !== 200 && response.status !== 201) {
+          signupbutton_.innerText='Signup'
+          signupbutton_.style.background='#0ec253'
+          signupbutton_.disabled=false
           throw new Error("server error");
         } else {
+          
+          signupbutton_.innerText='Signup'
+          signupbutton_.style.background="#0ec253"
+          signupbutton_.disabled=false
            console.log(response)
         }
       });
@@ -284,6 +297,7 @@ if(states.na)
 
     return (
       <div className="div-1-l">
+        <Msgshower/>
         <form className="div-form-l-1 div-form-shu-l-1"  
         onSubmit={(e) => submit_form(e)}>
           <p className="head-l-1">Signup into account</p>

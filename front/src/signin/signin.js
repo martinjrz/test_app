@@ -58,11 +58,14 @@ export const Signin = () => {
                         `,
           };
           if (googleuseremail) {
+            const googlebutton=document.getElementsById('google-signin-button')
             signedinuser(_em).then(async (payload_res) => {
               const { username } = payload_res.data.data.signedInGoogleusers;
-              if (username === "error" || username === "email not found") {
+              if (username === "error" || username === "email not found") {  
+                googlebutton.innerText='Google Signin'
                 await authinstance.signOut();
               } else {
+                googlebutton.innerText='Google Signin...'
                 const date = new Date();
                 const expiredate = date.setTime(date.getTime() + 36000000);
                 cookie.set("mb_", "false", {
@@ -297,7 +300,10 @@ export const Signin = () => {
             </button>
           </div>
           <div id="g-signin" className="g1-div">
-            <button onClick={(e) => signeduser(e)} className="google-signin">
+            <button 
+            id="google-signin-button"
+            onClick={(e) => signeduser(e)}
+             className="google-signin">
               Google Signin
             </button>
           </div>
