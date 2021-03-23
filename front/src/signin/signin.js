@@ -58,7 +58,7 @@ export const Signin = () => {
                         `,
           };
           if (googleuseremail) {
-            const googlebutton=document.getElementsById('google-signin-button')
+            const googlebutton=document.getElementById('google-signin-button')
             signedinuser(_em).then(async (payload_res) => {
               const { username } = payload_res.data.data.signedInGoogleusers;
               if (username === "error" || username === "email not found") {  
