@@ -300,7 +300,7 @@ if(states.na)
                 timer1=setTimeout(()=>{
                   
                   return dispatch({type:"set_username",name:e.target.value})
-                },800)
+                },400)
               }}
               onKeyPress={()=>{
                 clearTimeout(timer1)
@@ -320,7 +320,7 @@ if(states.na)
                 timer2=setTimeout(()=>{
                   MobileNoValidator(e.target.value)
                   return dispatch({type:"set_mobile_no",num:e.target.value})
-                },800)
+                },400)
               }}
               onKeyPress={()=>{
                 clearTimeout(timer2)

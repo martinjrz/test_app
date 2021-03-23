@@ -127,6 +127,12 @@ export const Signin = () => {
     }
   };
 
+  const signinbuttonuichanger=(button)=>
+  {
+    button.disabled = true;
+    button.innerText="Signin...."
+    button.style.background='#5cdb95'
+  }
   // object funtion
   function ReqtoServer() {
     const render = {
@@ -136,7 +142,7 @@ export const Signin = () => {
             }
             `,
     };
-    this.render_payload = async function () {
+    this.render_payload =async function () {
       return await base.post("/graphqlserver", render);
     };
   }
@@ -150,7 +156,7 @@ export const Signin = () => {
       password_ref.current.type = "text";
     }
   };
-  const signeduser = (e) => {
+  const signeduser = async(e) => {
     e.preventDefault();
     const { u_p, m_b } = state;
     if (disablesignin) {
@@ -164,21 +170,23 @@ export const Signin = () => {
                 `,
       };
       const button = document.querySelector("#butt_");
-      button.disabled = true;
-      button.style.background='#5cdb95'
-      signedinuser(_da).then((res) => {
+     signinbuttonuichanger(button)
+      signedinuser(_da).then(async(res) => {
         if (res.status === 201 || res.status === 200) {
           const { username } = res.data.data.signedInMobileusers;
           if (
             username === "mobile_no not found" ||
             username === "wrong password"
           ) {
+            button.innerText="Signin"
+            button.style.background = "#0ec253";
             button.disabled = false;
             return dispatch({
               type: "cancel_errorer",
               payload: { canceler: true },
             });
           } else {
+           await signinbuttonuichanger(button)
             const date = new Date();
             const expiredate = date.setTime(date.getTime() + 36000000);
             cookie.set("mb_", "true", {
