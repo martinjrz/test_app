@@ -1,6 +1,6 @@
 :root {
   --border: 1px solid red;
-  --border_bottom: 1px solid black;
+  --border_bottom: 1px solid #a5a1a1;
   --font_fam: "Roboto", sans-serif;
   --font_fam_open: "Open Sans", sans-serif;
   --font_fam_qua: "Quattrocento", serif;
@@ -42,7 +42,7 @@ htmL{
   justify-content: center;
   border: none;
   border-bottom:var(--border_bottom) ;
-   border-color:  var(--bottom-border-color);
+
 }
 .in-div-2 {
   width: 90%;
@@ -50,7 +50,7 @@ htmL{
   display: flex;
   justify-content: center;
   border-bottom:var(--border_bottom) ;
-  border-color:  var(--bottom-border-color);
+
 
 }
 .in-div-3 {
@@ -60,7 +60,7 @@ htmL{
   justify-content: center;
   border: none;
   border-bottom:var(--border_bottom) ;
-  border-color: var(--bottom-border-color);
+
 }
 .in-div-4 {
   width: 90%;
@@ -68,7 +68,6 @@ htmL{
   display: flex;
   justify-content: center;
   border-bottom:var(--border_bottom) ;
-  border-color:  var(--bottom-border-color);
   margin-bottom: 1rem;
 }
 .in-1 {

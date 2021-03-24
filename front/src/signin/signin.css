@@ -1,6 +1,6 @@
 :root{
     --border:1px solid red;
-    --border_bottom:1px solid black;
+    --border_bottom:1px solid #a5a1a1;
     --font_fam:'Roboto', sans-serif;
     --font_fam_open:'Open Sans', sans-serif;
     --font_fam_qua: 'Quattrocento', serif;
@@ -62,7 +62,6 @@ display: flex;
 justify-content: center;
 border: none;
 border-bottom:var(--border_bottom) ;
-border-color: #757474;
 }
 
 .sgn-div-2{
@@ -71,7 +70,6 @@ border-color: #757474;
     justify-content: center;
     border-bottom:var(--border_bottom) ;
     margin-top: 2rem;
-    border-color: #757474;
     }
    
 .in-1{

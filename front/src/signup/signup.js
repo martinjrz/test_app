@@ -99,52 +99,6 @@ const reducer=(state,action)=>{
          authinstance.signOut()
        }
     })
-// window.gapi.load("auth2", () => {
-//   const authinstance=  window.gapi.auth2
-//           .init({
-//             client_id:
-//               "1090207276654-b6qp5cl7plo37heaj8qkutqrn0lj92ce.apps.googleusercontent.com",
-//             cookiepolicy: "single_host_origin",
-//           })
-//           authinstance.attachClickHandler(elem,{},(googleuser)=>{
-           
-//           // authinstance.signOut()
-//           })
-//       });
-      
-   
-      // gapiserver.load("signin2", () => {
-      //   gapiserver.signin2.render("my-signin2", {
-      //     width: 180,
-      //     height: 32,
-      //     onsuccess: async () => {
-      //       const user = gapiserver.auth2.getAuthInstance();
-      //       const ex_user = user.currentUser.get().getBasicProfile().getName();
-      //       const ex_email = user.currentUser
-      //         .get()
-      //         .getBasicProfile()
-      //         .getEmail();
-      //       const googleusermutation = {
-      //         query: `
-      //             mutation{
-      //                 createGoogleuser(username:"${ex_user}",email:"${ex_email}"){
-      //                     username
-      //                 }
-      //             }
-      //             `,
-      //       };
-      //       postuser(googleusermutation).then((res) => {
-      //         if (res.status === 200 || res.status === 201) {
-      //           const { username } = res.data.data.createGoogleuser;
-      //           if (username === "gmail is already in use") {
-      //             user.signOut();
-      //           } else {
-      //           }
-      //         }
-      //       });
-      //     },
-      //   });
-      // });
     };
     document.body.appendChild(script);
   };
