@@ -530,7 +530,7 @@ server.use(
           });
         } else {
           remove_cookie(response)
-          return "true";
+          return "true"; 
         }
       },
       mb__verification: () => {

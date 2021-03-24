@@ -116,7 +116,7 @@ const reducer=(state,action)=>{
           setrender_of_signup_page(true);
         } else if (rendersigninOrnot === "false") {
           setrender_of_signup_page(false);
-       return history.push('/home')
+       return history.push('/')
       } else setrender_of_signup_page(true);
       }
     });
@@ -223,7 +223,7 @@ if(states.na)
             `,
       };
       const signupbutton_=document.getElementById('signup_button')
-      signupbutton_.innerText='Signup...'
+      signupbutton_.innerText='Signing up...'
       signupbutton_.disabled=true
       signupbutton_.style.background='#5cdb95'
      

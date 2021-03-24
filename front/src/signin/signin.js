@@ -4,6 +4,7 @@ import { AiOutlineEye } from "react-icons/ai";
 import { AiOutlineEyeInvisible } from "react-icons/ai";
 import { Link, useHistory } from "react-router-dom";
 import Cookie from "universal-cookie";
+import Loader from 'react-loader-spinner'
 import base from "../baseurl";
 import { gapisetup } from "../gapiserver";
 import { MdCancel } from "react-icons/md";
@@ -11,7 +12,7 @@ import { Mobilevalidator } from "../validator";
 import { Mobilenoinvalid } from "../error/error";
 import { scriptsetup, googleauthenticaion } from "../gapiserver";
 
-export const Signin = () => {
+export const Signin = (props) => {
   const history = useHistory();
   const cookie = new Cookie();
   let timer1, timer2;
@@ -71,8 +72,8 @@ export const Signin = () => {
                   path: "/",
                   expires: new Date(expiredate),
                 });
-                googlebutton.innerText='Google Signin...'
-                return history.push("/home");
+                googlebutton.innerText='Google Signing in...'
+                return history.push("/");
               }
             });
           }
@@ -89,29 +90,32 @@ export const Signin = () => {
 
   // use effect method
   useEffect(async () => {
+    console.log(props.render)
     signinbutton = document.getElementById("butt_");
     document.body.style.background = "white";
     const _req = new ReqtoServer();
-    await _req.render_payload().then(async (res) => {
-      if (res.status === 200 || res.status === 201) {
-        const { rendersigninOrnot } = res.data.data;
-        if (rendersigninOrnot === "true") {
-          const script = await scriptsetup();
-          script.onload = async () => {
-            const gapiserver = await gapisetup();
-            const authinstance = gapiserver.auth2.getAuthInstance();
-            authinstance.signOut();
-          };
-          setrender(true);
-          document.body.appendChild(script);
-        } else if (rendersigninOrnot === "false") {
-          return history.push("/home");
-        } else setrender(true);
-      }
-    });
+    // await _req.render_payload().then(async (res) => {
+    //   if (res.status === 200 || res.status === 201) {
+    //     const { rendersigninOrnot } = res.data.data;
+    //     if (rendersigninOrnot === "true") {
+    //       const script = await scriptsetup();
+    //       script.onload = async () => {
+    //         const gapiserver = await gapisetup();
+    //         const authinstance = gapiserver.auth2.getAuthInstance();
+    //         authinstance.signOut();
+    //       };
+    //       setrender(true);
+    //       document.body.appendChild(script);
+    //     } else if (rendersigninOrnot === "false") {
+    //       return history.push("/");
+    //     } else setrender(true);
+    //   }
+    // });
+    if(props.render===false)
+    return history.push('/')
     insertgapiscript();
     enablesigninbutton();
-  }, [state]);
+  }, [state,props]);
 
   const validatemobileno = Mobilevalidator(state.m_b);
 
@@ -133,7 +137,7 @@ export const Signin = () => {
   const signinbuttonuichanger=(button)=>
   {
     button.disabled = true;
-    button.innerText="Signin...."
+    button.innerText="Signing in...."
     button.style.background='#5cdb95'
   }
   // object funtion
@@ -196,13 +200,13 @@ export const Signin = () => {
               path: "/",
               expires: new Date(expiredate),
             });
-            history.push("/home");
+            history.push("/");
           }
         }
       });
     }
   };
-  if (render)
+  if (props.render)
     return (
       <div className="div-1-l">
         {state.canceler ? (
@@ -316,12 +320,13 @@ export const Signin = () => {
         </form>
       </div>
     );
-  else {
-    return (
-      <div></div>
-      // <div className="loader">
-      //   <Loader type="Bars" width={80} height={40} />
-      // </div>
-    );
-  }
+    else  {
+      const styles = {
+        display: "flex",
+        justifyContent: "center",
+        height: " 100vh",
+        alignItems: "center",
+      };
+      return <Loader style={styles} type="Oval" width={80} height={40}></Loader>;
+    }
 };

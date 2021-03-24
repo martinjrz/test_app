@@ -6,13 +6,20 @@ import { AiOutlinePlus } from "react-icons/ai";
 import { AiOutlineMinus } from "react-icons/ai";
 import "./product.css";
 import img from "./marsi.png";
-import { Link, NavLink, Redirect } from "react-router-dom";
+import {
+  BrowserRouter,
+  Link,
+  NavLink,
+  Redirect,
+  Route,
+  Switch,
+} from "react-router-dom";
 import Cookie from "universal-cookie";
 import Loader from "react-loader-spinner";
 import base from "../baseurl";
 import { gapisetup } from "../gapiserver";
 import { scriptsetup } from "../gapiserver";
-
+import Profile from "./userprofile/profile";
 const cookie = new Cookie();
 
 export default class Product extends Component {
@@ -44,7 +51,7 @@ export default class Product extends Component {
             const gapiserver = await gapisetup();
             const authinstance = gapiserver.auth2.getAuthInstance();
             authinstance.signOut();
-            this.redirecttosignedout()
+            this.redirecttosignedout();
           };
           document.body.appendChild(script);
         } else {
@@ -79,7 +86,7 @@ export default class Product extends Component {
             const authinstance = gapiserver.auth2.getAuthInstance();
             if (authinstance.currentUser.get().getBasicProfile())
               authinstance.signOut();
-            this.redirecttosignedout()
+            this.redirecttosignedout();
           };
           document.body.appendChild(script);
         } else {
@@ -107,7 +114,7 @@ export default class Product extends Component {
       const gapiserver = await gapisetup();
       const authinstance = gapiserver.auth2.getAuthInstance();
       authinstance.signOut();
-      this.redirecttosignedout()
+      this.redirecttosignedout();
     };
     document.body.style.background = "#3e3f3f";
     const _qe_user1 = {
@@ -175,12 +182,15 @@ export default class Product extends Component {
           };
           document.body.appendChild(script);
         } else {
-          this.redirecttosignedout()
+          this.redirecttosignedout();
         }
       }
     }
   }
+componentDidUpdate()
+{
 
+}
   Requestoserver = async (type_of_request) => {
     const data = await base.post("/graphqlserver", type_of_request);
     return data;
@@ -200,7 +210,7 @@ export default class Product extends Component {
           const gapiserver = await gapisetup();
           const authinstance = gapiserver.auth2.getAuthInstance();
           authinstance.signOut();
-          this.redirecttosignedout()
+          this.redirecttosignedout();
         } else if (logout_ === "verified_mb_auth") {
           this.redirecttosignedout();
         } else {
@@ -244,14 +254,14 @@ export default class Product extends Component {
       this.Requestoserver(typeof_req).then((responseback) => {
         if (responseback.status === 201 || responseback.status === 200) {
           const { cn_value, uV_ } = responseback.data.data.addtocarter;
-          if (uV_ === "ok") { 
-            console.log(uV_)
+          if (uV_ === "ok") {
+            console.log(uV_);
             this.setState({
               actual_cart_value: cn_value,
             });
           } else if (uV_ === "null") {
-            console.log(uV_)
-           this.props.history.replace('/signin')
+            console.log(uV_);
+            this.props.history.replace("/signin");
           }
         }
       });
@@ -267,29 +277,38 @@ export default class Product extends Component {
             </p>
             <p className="em-l-0"></p>
             <div className="l-div-1">
-              <NavLink
+              <Link
                 className="l-1"
                 onClick={() => {
                   document.title = "Home";
-                  window.location.reload();
+                 
                 }}
-                to="/home"
+                // to="/"
               >
                 Home
-              </NavLink>
+              </Link>
             </div>
             <button onClick={(e) => this.logout(e)} className="l-o-1">
               Logout
             </button>
-            <p className="p-l-1">
+            <Link
+              onClick={() => {
+                document.title = "user";
+                window.location.path='/user'
+              }}
+              // to="/user"
+              className="p-l-1"
+            >
               <AiOutlineUser />
-            </p>
+            </Link>   
             <p className="p-l-2">
               <BiCartAlt />
             </p>
             <p className="p-l-3">{this.state.actual_cart_value}</p>
           </div>
-          <div className="ace-div-1">
+          {/* section division*/}
+
+   <div className="ace-div-1">
             <div className="im-r-1">
               <div className="im-l-1">
                 <img className="im-p-1" src={img} />
@@ -339,20 +358,7 @@ export default class Product extends Component {
                 </p>
               </div>
             </div>
-          </div>
-          {/* <div className='ret-l-1'> 
-     <p className='ret-l-p-1'>
-Want to be a retailer? Then fill the form 
-</p>
-         <div>
-          <form className='fo-l-1'>
-              <input className='re-in-l-2' placeholder='full name'>
-              </input>
-              <input className='re-in-l-2' placeholder='email/mobile_no'></input>
-              <input className='re-in-l-2' placeholder='location'></input>
-          </form>
-         </div>
-     </div> */}
+          </div> 
         </div>
       );
     else if (!this.state.render_page)
