@@ -46,7 +46,7 @@ htmL{
 }
 .in-div-2 {
   width: 90%;
-  margin-top: 1rem;
+  margin-top: 1.5rem;
   display: flex;
   justify-content: center;
   border-bottom:var(--border_bottom) ;
@@ -54,7 +54,7 @@ htmL{
 
 }
 .in-div-3 {
-  margin-top: 1rem;
+  margin-top: 1.5rem;
   width: 90%;
   display: flex;
   justify-content: center;
@@ -64,7 +64,7 @@ htmL{
 }
 .in-div-4 {
   width: 90%;
-  margin-top: 1rem;
+  margin-top: 1.5rem;
   display: flex;
   justify-content: center;
   border-bottom:var(--border_bottom) ;
