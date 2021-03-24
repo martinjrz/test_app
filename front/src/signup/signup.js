@@ -18,7 +18,8 @@ const initialstate={
 na:'',
 mn:'',
 pass:'',
-repass:''
+repass:'',
+msg:''
 }
 const reducer=(state,action)=>{
   // console.log(state)
@@ -32,8 +33,8 @@ const reducer=(state,action)=>{
           return {...state,pass:action._up}
           case "set_repassword":
             return {...state,repass:action._urp}
-          case "show_name_error":
-            return {...state,shownameerrorer:action.payload.show}
+              case "Response_msg":
+                return {...state,msg:action.payload.msg}
       default:
         return {...state}
   }
@@ -87,7 +88,10 @@ const reducer=(state,action)=>{
               const { username } = payload_res.data.data.createGoogleuser;
               if (username === "gmail is already in use") {
                             authinstance.signOut()
+                            return dispatch({type:'Response_msg',payload:{msg:username}})
                           } else {
+                            return dispatch({type:'Response_msg',
+                            payload:{msg:'Your account is successfully created'}})
                           }
              }
            })
@@ -172,7 +176,7 @@ const reducer=(state,action)=>{
   // mobile error
   const MobileNoValidator=()=>{
     const {mn}=states
-    const checker_=/[\sA-Z\\^+=-_)(!@#$%&*)?/|><.,:;{}['"~`]]/gi
+    const checker_=/[\sA-Za-z\\^+=-_)(!@#$%&*)?/|><.,:;{}['"~`]]/g
     const validmobileno=mn.match(checker_)
     if(mn)
     {
@@ -181,7 +185,7 @@ const reducer=(state,action)=>{
         setmobileerror(true)
     
       }
-      else {
+      else  {
         setmobileerror(false)
       }
     
@@ -270,22 +274,32 @@ if(states.na)
       signupbutton_.style.background='#5cdb95'
      
       postuser(register_user).then((response) => {
+       const {username}=response.data.data.createMobileuser
         if (response.status !== 200 && response.status !== 201) {
           signupbutton_.innerText='Signup'
           signupbutton_.style.background='#0ec253'
           signupbutton_.disabled=false
           throw new Error("server error");
-        } else {
-          
+        } else if(username==="mobile no. is already in use"){
           signupbutton_.innerText='Signup'
           signupbutton_.style.background="#0ec253"
           signupbutton_.disabled=false
-           console.log(response)
+          return dispatch({type:'Response_msg',payload:{msg:username}})
+        }
+        else {
+          signupbutton_.innerText='Signup'
+          signupbutton_.style.background="#0ec253"
+          signupbutton_.disabled=false
+          return dispatch({type:"Response_msg",payload:{msg:"Your account is created successfully"}})
         }
       });
     }
     // setrenderdiv1(true);
   };
+  //set the response msge to null
+  const setmsgtonull=()=>{
+    return dispatch({type:"Response_msg",payload:{msg:''}})
+  }
   const goback=(e)=>{
     e.preventDefault()
     setrenderdiv1(false)
@@ -297,7 +311,9 @@ if(states.na)
 
     return (
       <div className="div-1-l">
-        <Msgshower/>
+       {states.msg?<Msgshower 
+       setmsgtonull={setmsgtonull}
+       msgtorender={states.msg}/>:<></> } 
         <form className="div-form-l-1 div-form-shu-l-1"  
         onSubmit={(e) => submit_form(e)}>
           <p className="head-l-1">Signup into account</p>

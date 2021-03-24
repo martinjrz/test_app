@@ -65,13 +65,13 @@ export const Signin = () => {
                 googlebutton.innerText='Google Signin'
                 await authinstance.signOut();
               } else {
-                googlebutton.innerText='Google Signin...'
                 const date = new Date();
                 const expiredate = date.setTime(date.getTime() + 36000000);
                 cookie.set("mb_", "false", {
                   path: "/",
                   expires: new Date(expiredate),
                 });
+                googlebutton.innerText='Google Signin...'
                 return history.push("/home");
               }
             });
