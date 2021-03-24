@@ -25,7 +25,6 @@ const cookie = new Cookie();
 export default class Product extends Component {
   constructor(props) {
     super(props);
-    console.log(this.props);
     this.price = 250;
     this.state = {
       up_cart_no: 0,
@@ -53,6 +52,7 @@ export default class Product extends Component {
             authinstance.signOut();
             this.redirecttosignedout();
           };
+          this.props.history.push('/signin')
           document.body.appendChild(script);
         } else {
           await this.setState({
@@ -70,7 +70,6 @@ export default class Product extends Component {
     const script = await scriptsetup();
     script.onload = async () => {
       const data = await gapisetup();
-      console.log(data);
     };
     document.body.appendChild(script);
   }
@@ -86,8 +85,9 @@ export default class Product extends Component {
             const authinstance = gapiserver.auth2.getAuthInstance();
             if (authinstance.currentUser.get().getBasicProfile())
               authinstance.signOut();
-            this.redirecttosignedout();
-          };
+              this.redirecttosignedout();
+            };
+          
           document.body.appendChild(script);
         } else {
           this.setState({
@@ -110,7 +110,6 @@ export default class Product extends Component {
 
     // signed out googleuserfunction
     const signOut_Guser = async () => {
-      console.log(this.props);
       const gapiserver = await gapisetup();
       const authinstance = gapiserver.auth2.getAuthInstance();
       authinstance.signOut();
@@ -152,10 +151,9 @@ export default class Product extends Component {
         const script = await scriptsetup();
         script.onload = async () => {
           window.gapi.load("auth2", async () => {
-            signOut_Guser();
+              signOut_Guser();
           });
         };
-        this.props.history.push("/signin");
         document.body.appendChild(script);
       }
     } else if (mb__ === "true" || mb__ === "false") {
@@ -171,15 +169,16 @@ export default class Product extends Component {
       };
       const payload_mb = await base.post("/graphqlserver", verified_query);
       const mb_verification = payload_mb.data.data.mb__verification;
-      console.log(mb_verification);
       if (mb_verification === "unverified_mb") {
         if (cookie.get("G_AUTHUSER_H")) {
           const script = await scriptsetup();
           script.onload = async () => {
             window.gapi.load("auth2", async () => {
-              signOut_Guser();
-            });
-          };
+              console.log('done')
+               signOut_Guser();
+              });
+            };
+            window.location.replace('/signin')
           document.body.appendChild(script);
         } else {
           this.redirecttosignedout();
@@ -187,10 +186,7 @@ export default class Product extends Component {
       }
     }
   }
-componentDidUpdate()
-{
-
-}
+  componentDidUpdate() {}
   Requestoserver = async (type_of_request) => {
     const data = await base.post("/graphqlserver", type_of_request);
     return data;
@@ -281,7 +277,6 @@ componentDidUpdate()
                 className="l-1"
                 onClick={() => {
                   document.title = "Home";
-                 
                 }}
                 // to="/"
               >
@@ -294,13 +289,13 @@ componentDidUpdate()
             <Link
               onClick={() => {
                 document.title = "user";
-                window.location.path='/user'
+                window.location.path = "/user";
               }}
               // to="/user"
               className="p-l-1"
             >
               <AiOutlineUser />
-            </Link>   
+            </Link>
             <p className="p-l-2">
               <BiCartAlt />
             </p>
@@ -308,7 +303,7 @@ componentDidUpdate()
           </div>
           {/* section division*/}
 
-   <div className="ace-div-1">
+          <div className="ace-div-1">
             <div className="im-r-1">
               <div className="im-l-1">
                 <img className="im-p-1" src={img} />
@@ -358,7 +353,7 @@ componentDidUpdate()
                 </p>
               </div>
             </div>
-          </div> 
+          </div>
         </div>
       );
     else if (!this.state.render_page)

@@ -524,8 +524,8 @@ server.use(
               return "true";
             } else if (!payload) {
               return "true";
-            } else {
-              return "false";
+            } else if(mb_!=='false' || mb_!=='true'){
+              return "true";
             }
           });
         } else {

@@ -90,29 +90,28 @@ export const Signin = (props) => {
 
   // use effect method
   useEffect(async () => {
-    console.log(props.render)
     signinbutton = document.getElementById("butt_");
     document.body.style.background = "white";
     const _req = new ReqtoServer();
-    // await _req.render_payload().then(async (res) => {
-    //   if (res.status === 200 || res.status === 201) {
-    //     const { rendersigninOrnot } = res.data.data;
-    //     if (rendersigninOrnot === "true") {
-    //       const script = await scriptsetup();
-    //       script.onload = async () => {
-    //         const gapiserver = await gapisetup();
-    //         const authinstance = gapiserver.auth2.getAuthInstance();
-    //         authinstance.signOut();
-    //       };
-    //       setrender(true);
-    //       document.body.appendChild(script);
-    //     } else if (rendersigninOrnot === "false") {
-    //       return history.push("/");
-    //     } else setrender(true);
-    //   }
-    // });
-    if(props.render===false)
-    return history.push('/')
+    await _req.render_payload().then(async (res) => {
+      if (res.status === 200 || res.status === 201) {
+        const { rendersigninOrnot } = res.data.data;
+        if (rendersigninOrnot === "true") {
+          // const script = await scriptsetup();
+          // script.onload = async () => {
+          //   const gapiserver = await gapisetup();
+          //   const authinstance = gapiserver.auth2.getAuthInstance();
+          //   authinstance.signOut();
+          // };
+          setrender(true);
+          // document.body.appendChild(script);
+        } else if (rendersigninOrnot === "false") {
+          return history.push("/");
+        } else setrender(true);
+      }
+    });
+    // if(props.render===false)
+    // return history.push('/')
     insertgapiscript();
     enablesigninbutton();
   }, [state,props]);
@@ -206,7 +205,7 @@ export const Signin = (props) => {
       });
     }
   };
-  if (props.render)
+  if (render)
     return (
       <div className="div-1-l">
         {state.canceler ? (
