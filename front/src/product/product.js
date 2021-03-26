@@ -178,7 +178,6 @@ export default class Product extends Component {
                signOut_Guser();
               });
             };
-            window.location.replace('/signin')
           document.body.appendChild(script);
         } else {
           this.redirecttosignedout();

@@ -103,15 +103,14 @@ export const Signin = (props) => {
           //   const authinstance = gapiserver.auth2.getAuthInstance();
           //   authinstance.signOut();
           // };
-          setrender(true);
+          console.log('done')
+             setrender(true);
           // document.body.appendChild(script);
         } else if (rendersigninOrnot === "false") {
           return history.push("/");
         } else setrender(true);
       }
     });
-    // if(props.render===false)
-    // return history.push('/')
     insertgapiscript();
     enablesigninbutton();
   }, [state,props]);

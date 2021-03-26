@@ -517,18 +517,22 @@ server.use(
       // rendersignin Or not
       rendersigninOrnot: () => {
         const { mb_, __rt } = request.cookies;
+        console.log('thisis from sever')
         if (mb_ && __rt) {
+         
           return jwt.verify(__rt, secretkey, (err, payload) => {
             if (err) {
               remove_cookie(response)
               return "true";
             } else if (!payload) {
               return "true";
-            } else if(mb_!=='false' || mb_!=='true'){
-              return "true";
+            } else {
+              console.log('i am false')
+              return "false";
             }
           });
         } else {
+     
           remove_cookie(response)
           return "true"; 
         }

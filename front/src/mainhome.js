@@ -3,8 +3,6 @@ import {
   BrowserRouter,
   Route,
   Switch,
-  useHistory,
-  Link,
 } from "react-router-dom";
 import Product from "./product/product";
 import { Signin } from "./signin/signin";
@@ -41,7 +39,7 @@ const [state,dispatch]=useReducer(reducer,{initialestate})
       <BrowserRouter>
         <Switch>
           <Route exact path="/" component={(props) => <Product res={rendersignin} {...props} />} />
-          <Route exact path="/signin" component={()=><Signin />} />
+          <Route exact path="/signin" component={Signin} />
           <Route exact path="/signup" component={Signup} />
         </Switch>
       </BrowserRouter>
