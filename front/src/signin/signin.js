@@ -12,7 +12,7 @@ import { Mobilevalidator } from "../validator";
 import { Mobilenoinvalid } from "../error/error";
 import { scriptsetup, googleauthenticaion } from "../gapiserver";
 
-export const Signin = (props) => {
+export default function Signin(props)  {
   const history = useHistory();
   const cookie = new Cookie();
   let timer1, timer2;

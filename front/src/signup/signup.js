@@ -9,7 +9,7 @@ import {Mobilenoinvalid, Nameerror,Passwordlengtherror} from '../error/error'
 import '../error/error.css'
 import { scriptsetup,googleauthenticaion } from "../gapiserver";
 import Msgshower from './msgshower'
-export const Signup = (props) => {
+export default function Signup(props)  {
 
    const history=useHistory()
    let signupbutton

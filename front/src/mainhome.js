@@ -6,8 +6,9 @@ import {
   Switch,
 } from "react-router-dom";
 import Product from "./product/product";
+// import  Signin from "./signin/signin";
 
-// import { Signup } from "./signup/signup";
+// import  Signup  from "./signup/signup";
 import base from "./baseurl";
 import Loader from 'react-loader-spinner'
 
