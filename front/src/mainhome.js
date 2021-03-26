@@ -1,15 +1,30 @@
 import React, { useEffect, useState,useReducer } from "react";
+import loadable from 'react-loadable'
 import {
   BrowserRouter,
   Route,
   Switch,
 } from "react-router-dom";
 import Product from "./product/product";
-import { Signin } from "./signin/signin";
-import { Signup } from "./signup/signup";
+
+// import { Signup } from "./signup/signup";
 import base from "./baseurl";
 import Loader from 'react-loader-spinner'
+
+
+const Signin=loadable({
+  loader:()=>import ("./signin/signin"),
+  loading:()=><div>loading</div>
+})
+
+const Signup=loadable({
+  loader:()=>import ("./signup/signup"),
+  loading:()=><div>loading.....</div>
+})
+
 export default function Index() {
+
+
 
   const initialestate={
     msg:null
@@ -22,11 +37,6 @@ const reducer=(state,action)=>{
   }
 }
 
-const [state,dispatch]=useReducer(reducer,{initialestate})
-
-  const [rendersignin, setrendersignin] = useState(null);
-// request to server on each page rendering 
-
 
   useEffect(() => {
 
@@ -38,7 +48,7 @@ const [state,dispatch]=useReducer(reducer,{initialestate})
     <div>
       <BrowserRouter>
         <Switch>
-          <Route exact path="/" component={(props) => <Product res={rendersignin} {...props} />} />
+          <Route exact path="/" component={(props) => <Product />} />
           <Route exact path="/signin" component={Signin} />
           <Route exact path="/signup" component={Signup} />
         </Switch>
