@@ -52,7 +52,7 @@ const reducer=(state,action)=>{
     <div>
       <BrowserRouter>
         <Switch>
-          <Route exact path="/" component={(props) => <Product />} />
+          <Route exact path="/" component={(props) => <Product {...props}/>} />
           <Route exact path="/signin" component={Signin} />
           <Route exact path="/signup" component={Signup} />
         </Switch>
