@@ -102,6 +102,7 @@ export default class Product extends Component {
 
   // when the page first render
   async componentDidMount() {
+    console.log(this.props)
     const mb__ = await cookie.get("mb_");
     document.body.style.background = "#3e3f3f";
     await this.setState({

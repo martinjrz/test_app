@@ -10,6 +10,7 @@ import { gapisetup } from "../gapiserver";
 import { MdCancel } from "react-icons/md";
 import { Mobilevalidator } from "../validator";
 import { Mobilenoinvalid } from "../error/error";
+import {Helmet} from 'react-helmet'
 import { scriptsetup, googleauthenticaion } from "../gapiserver";
 
 export default function Signin(props)  {
@@ -206,7 +207,12 @@ export default function Signin(props)  {
   };
   if (render)
     return (
+     
       <div className="div-1-l">
+         <Helmet >
+        <title>Marsi chamal signin  page</title>
+        <meta name="description" content="Helmet application" />
+        </Helmet>
         {state.canceler ? (
           <div className="err-alerter">
             <p className="wr-er">Incorrect mobile no. or password</p>

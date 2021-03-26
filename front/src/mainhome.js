@@ -15,15 +15,21 @@ import Loader from 'react-loader-spinner'
 
 const Signin=loadable({
   loader:()=>import ("./signin/signin"),
-  loading:()=><div>loading......</div>
+  loading:()=> <div className="loader">
+  <Loader type="Oval" width={80} height={40} />
+</div>
 })
 const Product=loadable({
   loader:()=>import ("./product/product"),
-  loading:()=><div>loading ......</div>
+  loading:()=> <div className="loader">
+  <Loader type="Oval" width={80} height={40} />
+</div>
 })
 const Signup=loadable({
   loader:()=>import ("./signup/signup"),
-  loading:()=><div>loading.....</div>
+  loading:()=> <div className="loader">
+  <Loader type="Oval" width={80} height={40} />
+</div>
 })
 
 export default function Index() {

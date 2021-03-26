@@ -17,13 +17,13 @@ const port = process.env.PORT || 5000;
 server.use(bodyparser.json());
 server.use(bodyparser.urlencoded({ extended: true }));
 
-server.use(
-  cors({
-    credentials: true,
-    origin: "http://marsi-chammal-red-rice-app.herokuapp.com",
-    methods: ["post", "put", "get", "delete"],
-  })
-);
+// server.use(
+//   cors({
+//     credentials: true,
+//     origin: "http://marsi-chammal-red-rice-app.herokuapp.com",
+//     methods: ["post", "put", "get", "delete"],
+//   })
+// );
 
 const secretkey = `asdfadsfdfk@&*%&^%^
 *@&*&dhfhadsjfh
