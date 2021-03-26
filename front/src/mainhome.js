@@ -5,7 +5,7 @@ import {
   Route,
   Switch,
 } from "react-router-dom";
-import Product from "./product/product";
+// import Product from "./product/product";
 // import  Signin from "./signin/signin";
 
 // import  Signup  from "./signup/signup";
@@ -15,9 +15,12 @@ import Loader from 'react-loader-spinner'
 
 const Signin=loadable({
   loader:()=>import ("./signin/signin"),
-  loading:()=><div>loading</div>
+  loading:()=><div>loading......</div>
 })
-
+const Product=loadable({
+  loader:()=>import ("./product/product"),
+  loading:()=><div>loading ......</div>
+})
 const Signup=loadable({
   loader:()=>import ("./signup/signup"),
   loading:()=><div>loading.....</div>
